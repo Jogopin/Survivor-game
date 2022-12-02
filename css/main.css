@@ -1,0 +1,19 @@
+body{
+    background-color: #6B2D2B;
+    margin:0;
+    padding:0;
+
+}
+#board{
+    position:relative;
+    margin:150px auto;
+    width: 800px;
+    height: 600px;
+    background-color: rgba(182, 182, 182, 0.397);
+    
+}
+#player{
+    position:absolute;
+    background-color:#141313 ;
+   
+}
