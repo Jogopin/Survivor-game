@@ -8,9 +8,8 @@ class ELementOnBoard{
 
         this.units = `px`
             
-        //initial point of the element  pointX pointY on the board
-        this.pointX =null
-        this.pointY = null
+        //initial point of the element  X=coordXY[0] Y=coordXY[1] on the board
+        this.coordXY =[null,null] 
         
         
         
@@ -28,8 +27,8 @@ class ELementOnBoard{
         this.domElem.style.height=this.height + this.units
         //initial position
         this.domElem.style.position =`absolute`
-        this.domElem.style.left=this.pointX +this.units
-        this.domElem.style.bottom= this.pointY + this.units
+        this.domElem.style.left=this.coordXY[0] +this.units
+        this.domElem.style.bottom= this.coordXY[1] + this.units
         
 
         //create the element in the HTML
@@ -37,30 +36,30 @@ class ELementOnBoard{
         boardElem.appendChild(this.domElem)
 
     }
-    positionOnBoard(x,y){
-        this.domElem.style.left=x +this.units
-        this.domElem.style.bottom=y+ this.units 
+    changeCoordinates(coordinatesXY){
+        this.domElem.style.left=coordinatesXY[0] +this.units
+        this.domElem.style.bottom=coordinatesXY[1]+ this.units 
     }
     move(direction){
         switch(direction){
            case `left`:
-               this.pointX-=this.steps
-               this.domElem.style.left=this.pointX+this.units
+               this.coordXY[0]-=this.steps
+               this.domElem.style.left=this.coordXY[0]+this.units
               
                break;
            case `right`:
-               this.pointX+=this.steps
-               this.domElem.style.left=this.pointX+this.units
+               this.coordXY[0]+=this.steps
+               this.domElem.style.left=this.coordXY[0]+this.units
                
                break;
            case `down`:
-               this.pointY-=this.steps
-               this.domElem.style.bottom=this.pointY+this.units
+               this.coordXY[1]-=this.steps
+               this.domElem.style.bottom=this.coordXY[1]+this.units
                
                break;
            case `up`:
-               this.pointY+=this.steps
-               this.domElem.style.bottom=this.pointY+this.units
+               this.coordXY[1]+=this.steps
+               this.domElem.style.bottom=this.coordXY[1]+this.units
               
                break;
     
@@ -75,8 +74,8 @@ class Player extends ELementOnBoard{
         super(width,height,steps)
         
         
-        this.pointX = 400-this.width/2;//from 0 to 800 left--->rigth
-        this.pointY = 300-this.height/2;//from 0 to 600 bottom--->top
+        this.coordXY[0] = 400-this.width/2;//from 0 to 800 left--->rigth
+        this.coordXY[1] = 300-this.height/2;//from 0 to 600 bottom--->top
         
 
         this.domElem.className=`player`
@@ -86,7 +85,7 @@ class Player extends ELementOnBoard{
         this.pressedKeyArray=[false,false,false,false]//  [ArrowUP,ArrowRight,ArrowDown,ArrowLeft]
         //note: when 2 keys are pressed both values in the array are true 
         
-        this.positionOnBoard(this.pointX,this.pointY)
+        this.changeCoordinates(this.coordXY)
         
     } 
 }
@@ -96,10 +95,56 @@ class Zombie extends ELementOnBoard{
         
         super(width,height,steps) 
         this.domElem.className=`zombie`
-        this.pointX=100
-        this.pointY=0
-        this.positionOnBoard(this.pointX,this.pointY)
+
+
         
+        this.changeCoordinates(this.randomPosition())
+        
+    }
+    randomPosition(){
+        let posibility=Math.floor(Math.random()*4) // 4==> one per each border
+        
+        // note: the board is 800 width 600 height
+        switch(posibility){
+            case 0:
+                this.coordXY[0]=Math.random()*(800-this.width)
+                this.coordXY[1]=0
+                break;
+            case 1:
+                this.coordXY[0]=Math.random()*(800-this.width)
+                this.coordXY[1]=(600-this.height) // width 
+                break;
+            case 2:
+                this.coordXY[0]=0
+                this.coordXY[1]=Math.random()*(600-this.height)
+                break;
+            case 3:
+                this.coordXY[0]=800-this.width
+                this.coordXY[1]=Math.random()*(600-this.height)
+                break;
+        }
+        return this.coordXY
+
+    }
+    move(){
+        //the hypotenuse is the absolute distance between the player and the zombie 
+        let hypotenuse=Math.sqrt((player.coordXY[0]-this.coordXY[0])**2+(player.coordXY[1]-this.coordXY[1])**2)
+        // the distance in the X-axis between the zombie and the player is D(x)=hypotenuse*cos(angle)
+        // the distance in the Y-axis between the zombie and the player is D(y)=hypotenuse*sen(angle)
+
+        // cosAng and senAng are the cosine and sine of the angle formed by the hypotenuse and x-axis
+        let cosAng=(player.coordXY[0]-this.coordXY[0])/hypotenuse
+        let senAng=(player.coordXY[1]-this.coordXY[1])/hypotenuse
+
+
+        // the function of a straight line is X=a*t+Xo and Y=b*t+Yo where a=Vx, b=Vy, Xo= this.coordXY[0] and Yo=this.coordXY[1] (initial position)
+        // the the derivative of the functions are X=Vx and Y=Vy 
+        // the velocity towards the player (V(t)) is constant, Vx=V(t)cos(angle) and Vy=V(t)sen(angle)
+
+        // Vt=this.steps  and we are calculating for every interval--> t=1 
+        this.coordXY[0]=this.steps*cosAng+this.coordXY[0]
+        this.coordXY[1]=+this.steps*senAng+this.coordXY[1]
+        this.changeCoordinates(this.coordXY)
     }
 }
 
@@ -107,7 +152,7 @@ class Zombie extends ELementOnBoard{
 
 
 const player = new Player(20,20,4)
-const zombie = new Zombie(30,30,2)
+const zombies = []
 
 
 
@@ -146,19 +191,40 @@ document.addEventListener(`keyup`, (e) => {
 
 //**************************************************** */
 
-let millisecond=0 //Game time
-let seconds = 0
-let fps=60 // frames per second
+
+
+let timeInSeconds = 0 //total time in seconds
+const fps=50 // frames per second, note when 60fps, a warning appears
+let intervalCounter=0
+const intervalDelay= 1000/fps
+
 
 //globalInterval, it sets the framerate at which everything moves
-const globalInterval = setInterval(()=>{
-    
-    if(millisecond%fps===0) seconds ++ 
-    //player movement depending of player.pressedKeyArray
-    if(player.pressedKeyArray[0]) player.move(`up`)
-    if(player.pressedKeyArray[1]) player.move(`right`)
-    if(player.pressedKeyArray[2]) player.move(`down`)
-    if(player.pressedKeyArray[3]) player.move(`left`)
-    
-    
-},1000/fps)
+
+const globalInterval = setInterval(() => {
+
+  intervalCounter++;
+
+  //calculates total of Seconds passed
+  if (intervalCounter % fps === 0) {
+    timeInSeconds++;
+    console.log(timeInSeconds, `s`);
+  }
+  //player movement depending of player.pressedKeyArray
+  if (player.pressedKeyArray[0]) player.move(`up`);
+  if (player.pressedKeyArray[1]) player.move(`right`);
+  if (player.pressedKeyArray[2]) player.move(`down`);
+  if (player.pressedKeyArray[3]) player.move(`left`);
+
+  //zombies per sec
+  if (intervalCounter % (4*fps) === 0) {
+    zombies.push(new Zombie(30, 30, 2));
+    console.log("zombie created")
+  }
+
+  zombies.forEach((zombie)=>zombie.move())
+
+
+  
+}, intervalDelay);
+
