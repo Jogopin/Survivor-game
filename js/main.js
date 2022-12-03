@@ -85,6 +85,7 @@ class ELementOnBoard {
         break;
     }
   }
+  
 }
 
 class Player extends ELementOnBoard{
@@ -166,6 +167,20 @@ class Zombie extends ELementOnBoard{
         this.coordXY[1]=+this.steps*senAng+this.coordXY[1]
         this.changeCoordinates(this.coordXY)
     }
+    collitionDetector(elem1,elem2){
+        elem1.coordXY
+        elem2.coordXY
+        
+        if (
+            elem1.coordXY[0] < elem2.coordXY[0] + elem2.width &&
+            elem1.coordXY[0] + elem1.width > elem2.coordXY[0] &&
+            elem1.coordXY[1] < elem2.coordXY[1] + elem2.height &&
+            elem1.height + elem1.coordXY[1] > elem2.coordXY[1]
+          ) {
+            
+            console.log("Collition detected!!!!");
+          } 
+      }
 }
 
 
@@ -242,7 +257,10 @@ const globalInterval = setInterval(() => {
     console.log("zombie created")
   }
   if (intervalCounter%3===0){
-    zombies.forEach((zombie)=>zombie.move())
+    zombies.forEach((zombie)=>{
+    zombie.move()
+    zombie.collitionDetector(player,zombie)
+    })
   }
 
   
