@@ -1,72 +1,90 @@
-class ELementOnBoard{
-    constructor(width,height,steps){
-        
-        this.className= null
-        this.width = width;
-        this.height = height;
-        this.steps = steps //amount of steps it moves per interval
+class ELementOnBoard {
+  constructor(width, height, steps) {
+    this.boarWidth = 800; // this value should come from the class Game when create it
+    this.boardHeight = 600; // this value should come from the class Game when create it
+    this.className = null;
+    this.width = width;
+    this.height = height;
+    this.steps = steps; //amount of steps it moves per interval
 
-        this.units = `px`
-            
-        //initial point of the element  X=coordXY[0] Y=coordXY[1] on the board
-        this.coordXY =[null,null] 
-        
-        
-        
-         this.domElem = null;
-         this.createElement(this.className)
-       
-    }
-    createElement(className){
-        //create the element
-        this.domElem= document.createElement(`div`);
-        //add properties    
-        this.domElem.className=className
-        //size
-        this.domElem.style.width=this.width + this.units
-        this.domElem.style.height=this.height + this.units
-        //initial position
-        this.domElem.style.position =`absolute`
-        this.domElem.style.left=this.coordXY[0] +this.units
-        this.domElem.style.bottom= this.coordXY[1] + this.units
-        
+    this.units = `px`;
 
-        //create the element in the HTML
-        const boardElem =document.getElementById(`board`)
-        boardElem.appendChild(this.domElem)
+    //initial point of the element  X=coordXY[0] Y=coordXY[1] on the board
+    this.coordXY = [null, null];
 
+    this.domElem = null;
+    this.createElement(this.className);
+  }
+  createElement(className) {
+    //create the element
+    this.domElem = document.createElement(`div`);
+    //add properties
+    this.domElem.className = className;
+    //size
+    this.domElem.style.width = this.width + this.units;
+    this.domElem.style.height = this.height + this.units;
+    //initial position
+    this.domElem.style.position = `absolute`;
+    this.domElem.style.left = this.coordXY[0] + this.units;
+    this.domElem.style.bottom = this.coordXY[1] + this.units;
+
+    //create the element in the HTML
+    const boardElem = document.getElementById(`board`);
+    boardElem.appendChild(this.domElem);
+  }
+  changeCoordinates(coordinatesXY) {
+    this.domElem.style.left = coordinatesXY[0] + this.units;
+    this.domElem.style.bottom = coordinatesXY[1] + this.units;
+  }
+  move(direction) {
+
+    switch (direction) {
+
+      case `left`:
+
+        if (this.coordXY[0] <= 0) {// dont allow the movement out of the board
+          this.coordXY[0] = 0;
+          this.domElem.style.left = "0" + this.units;
+        } else {
+          this.coordXY[0] -= this.steps;
+          this.domElem.style.left = this.coordXY[0] + this.units;
+        }
+
+        break;
+
+      case `right`:
+
+        if (this.coordXY[0] >= this.boarWidth-this.width) { // dont allow the movement out of the board
+          this.coordXY[0] = this.boarWidth-this.width;
+        } else {
+          this.coordXY[0] += this.steps;
+
+          this.domElem.style.left = this.coordXY[0] + this.units;
+        }
+        break;
+
+      case `down`:
+        if (this.coordXY[1] <= 0) {// dont allow the movement out of the board
+          this.coordXY[1] = 0;
+          this.domElem.style.bottom = `0` + this.units;
+        } else {
+          this.coordXY[1] -= this.steps;
+          this.domElem.style.bottom = this.coordXY[1] + this.units;
+        }
+
+        break;
+
+      case `up`:
+        if (this.coordXY[1] >= this.boardHeight-this.height) {// dont allow the movement out of the board
+          this.coordXY[1] = this.boardHeight-this.height;
+        } else {
+          this.coordXY[1] += this.steps;
+          this.domElem.style.bottom = this.coordXY[1] + this.units;
+        }
+
+        break;
     }
-    changeCoordinates(coordinatesXY){
-        this.domElem.style.left=coordinatesXY[0] +this.units
-        this.domElem.style.bottom=coordinatesXY[1]+ this.units 
-    }
-    move(direction){
-        switch(direction){
-           case `left`:
-               this.coordXY[0]-=this.steps
-               this.domElem.style.left=this.coordXY[0]+this.units
-              
-               break;
-           case `right`:
-               this.coordXY[0]+=this.steps
-               this.domElem.style.left=this.coordXY[0]+this.units
-               
-               break;
-           case `down`:
-               this.coordXY[1]-=this.steps
-               this.domElem.style.bottom=this.coordXY[1]+this.units
-               
-               break;
-           case `up`:
-               this.coordXY[1]+=this.steps
-               this.domElem.style.bottom=this.coordXY[1]+this.units
-              
-               break;
-    
-    
-       
-    }
-    }
+  }
 }
 
 class Player extends ELementOnBoard{
@@ -74,8 +92,8 @@ class Player extends ELementOnBoard{
         super(width,height,steps)
         
         
-        this.coordXY[0] = 400-this.width/2;//from 0 to 800 left--->rigth
-        this.coordXY[1] = 300-this.height/2;//from 0 to 600 bottom--->top
+        this.coordXY[0] = (this.boarWidth/2)-this.width/2;
+        this.coordXY[1] = (this.boardHeight/2)-this.height/2;
         
 
         this.domElem.className=`player`
@@ -138,10 +156,12 @@ class Zombie extends ELementOnBoard{
 
 
         // the function of a straight line is X=a*t+Xo and Y=b*t+Yo where a=Vx, b=Vy, Xo= this.coordXY[0] and Yo=this.coordXY[1] (initial position)
-        // the the derivative of the functions are X=Vx and Y=Vy 
+        // the  derivative of the functions are Vx=a and Vy=b 
         // the velocity towards the player (V(t)) is constant, Vx=V(t)cos(angle) and Vy=V(t)sen(angle)
 
         // Vt=this.steps  and we are calculating for every interval--> t=1 
+
+        //X=a*t+Xo and Y=b*t+Yo
         this.coordXY[0]=this.steps*cosAng+this.coordXY[0]
         this.coordXY[1]=+this.steps*senAng+this.coordXY[1]
         this.changeCoordinates(this.coordXY)
@@ -216,14 +236,14 @@ const globalInterval = setInterval(() => {
   if (player.pressedKeyArray[2]) player.move(`down`);
   if (player.pressedKeyArray[3]) player.move(`left`);
 
-  //zombies per sec
+  //zombies every 4 sec 
   if (intervalCounter % (4*fps) === 0) {
     zombies.push(new Zombie(30, 30, 2));
     console.log("zombie created")
   }
-
-  zombies.forEach((zombie)=>zombie.move())
-
+  if (intervalCounter%3===0){
+    zombies.forEach((zombie)=>zombie.move())
+  }
 
   
 }, intervalDelay);
