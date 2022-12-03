@@ -1,76 +1,113 @@
-class Player{
-    constructor(){
-       
-        this.width = 30;
-        this.height = 30;
+class ELementOnBoard{
+    constructor(width,height,steps){
+        
+        this.className= null
+        this.width = width;
+        this.height = height;
+        this.steps = steps //amount of steps it moves per interval
+
         this.units = `px`
-
+            
         //initial point of the element  pointX pointY on the board
-
-        this.pointX = 400-this.width/2;//from 0 to 800 left--->rigth
-        this.pointY = 300-this.height/2;//from 0 to 600 bottom--->top
+        this.pointX =null
+        this.pointY = null
         
-        this.steps = 4 //amount of steps it moves per interval
         
-        this.playerElem = null;
-
-        this.pressedKeyArray=[false,false,false,false]//  [ArrowUP,ArrowRight,ArrowDown,ArrowLeft]
-        //note: when 2 keys are pressed both values in the array are true 
         
-        this.createPlayer()
-        
+         this.domElem = null;
+         this.createElement(this.className)
+       
     }
-    createPlayer(){
+    createElement(className){
         //create the element
-        this.playerElem= document.createElement(`div`);
+        this.domElem= document.createElement(`div`);
         //add properties    
-        this.playerElem.id=`player`
+        this.domElem.className=className
         //size
-        this.playerElem.style.width=this.width + this.units
-        this.playerElem.style.height=this.height + this.units
+        this.domElem.style.width=this.width + this.units
+        this.domElem.style.height=this.height + this.units
         //initial position
-        this.playerElem.style.left=this.pointX +this.units
-        this.playerElem.style.bottom= this.pointY + this.units
+        this.domElem.style.position =`absolute`
+        this.domElem.style.left=this.pointX +this.units
+        this.domElem.style.bottom= this.pointY + this.units
         
 
         //create the element in the HTML
         const boardElem =document.getElementById(`board`)
-        boardElem.appendChild(this.playerElem)
+        boardElem.appendChild(this.domElem)
 
     }
-
+    positionOnBoard(x,y){
+        this.domElem.style.left=x +this.units
+        this.domElem.style.bottom=y+ this.units 
+    }
     move(direction){
         switch(direction){
            case `left`:
                this.pointX-=this.steps
-               this.playerElem.style.left=this.pointX+this.units
+               this.domElem.style.left=this.pointX+this.units
               
                break;
            case `right`:
                this.pointX+=this.steps
-               this.playerElem.style.left=this.pointX+this.units
+               this.domElem.style.left=this.pointX+this.units
                
                break;
            case `down`:
                this.pointY-=this.steps
-               this.playerElem.style.bottom=this.pointY+this.units
+               this.domElem.style.bottom=this.pointY+this.units
                
                break;
            case `up`:
                this.pointY+=this.steps
-               this.playerElem.style.bottom=this.pointY+this.units
+               this.domElem.style.bottom=this.pointY+this.units
               
                break;
     
     
        
     }
+    }
 }
+
+class Player extends ELementOnBoard{
+    constructor(width,height,steps){
+        super(width,height,steps)
+        
+        
+        this.pointX = 400-this.width/2;//from 0 to 800 left--->rigth
+        this.pointY = 300-this.height/2;//from 0 to 600 bottom--->top
+        
+
+        this.domElem.className=`player`
+        
+
+    
+        this.pressedKeyArray=[false,false,false,false]//  [ArrowUP,ArrowRight,ArrowDown,ArrowLeft]
+        //note: when 2 keys are pressed both values in the array are true 
+        
+        this.positionOnBoard(this.pointX,this.pointY)
+        
+    } 
+}
+
+class Zombie extends ELementOnBoard{
+    constructor(width,height,steps){
+        
+        super(width,height,steps) 
+        this.domElem.className=`zombie`
+        this.pointX=100
+        this.pointY=0
+        this.positionOnBoard(this.pointX,this.pointY)
+        
+    }
 }
 
 
-const player = new Player
 
+
+const player = new Player(20,20,4)
+const zombie = new Zombie(30,30,2)
 
 
 

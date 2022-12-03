@@ -12,8 +12,11 @@ body{
     background-color: rgba(182, 182, 182, 0.397);
     
 }
-#player{
-    position:absolute;
+.player{
+    
     background-color:#141313 ;
    
+}
+.zombie{
+   background-color: #60A885; 
 }
