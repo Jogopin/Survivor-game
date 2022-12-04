@@ -299,8 +299,24 @@ class Game {
     `
     //place the element
     document.querySelector("#board").appendChild(gameOverElem) 
+
+    // replay btn
+
+    let replay = document.querySelector("#replay")
+    replay.addEventListener(`click`,()=>{
+      this.timeInSeconds=0
+      this.zombies.forEach((zombie)=>{zombie.domElem.remove()})
+      this.player.domElem.remove()
+      this.zombies=[]
+      this.score=0
+      gameOverElem.remove()
+      this.startGame()
+      
+      })
+    }
    
-  }
+  
+  
   createScore(){
 
     let scoreBoxWidth =0
@@ -350,6 +366,7 @@ class Game {
 
     return twoDig
   }
+
 }  
 
 
