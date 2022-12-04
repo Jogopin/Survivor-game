@@ -178,8 +178,12 @@ class Zombie extends ELementOnBoard{
             elem1.height + elem1.coordXY[1] > elem2.coordXY[1]
           ) {
             
-            console.log("Collition detected!!!!");
-          } 
+           return true
+
+          }else{
+
+            return false
+          }
       }
 }
 
@@ -201,6 +205,7 @@ class Game {
 
 
     this.player = new Player(20, 20, 4);
+    this.zombies.push(new Zombie(30, 30, 2))
     this.eventListeners()
 
     let intervalCounter = 0;
@@ -231,10 +236,12 @@ class Game {
       if (intervalCounter % 3 === 0) {
         this.zombies.forEach((zombie) => {
           zombie.moveTowards(this.player);
-          zombie.collitionDetector(this.player, zombie);
+          if(zombie.collitionDetector(this.player, zombie)){
+            game.stopGame()
+          };
         });
       }
-    }, this.intervalDelay);
+    },this.intervalDelay);
 
   }
 
@@ -271,6 +278,15 @@ class Game {
     });
 
     //**************************************************** */
+  }
+  stopGame(){
+    clearInterval(this.globalInterval)
+    alert(` -----Game Over----
+        dont let them eat you!!!!!`)
+
+
+    //remove the player from the game and HTML
+    this.player.domElem.remove()
   }
 }  
 
