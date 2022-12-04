@@ -1,9 +1,28 @@
+@font-face {
+    font-family: 'zombies';
+    src: url('/css/Fonts/CurseoftheZombie.woff2') format('woff2'),
+        url('/css/Fonts/CurseoftheZombie.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'chuky';
+    src: url('/css/Fonts/ChukyChuky-Black.woff2') format('woff2'),
+        url('/css/Fonts/ChukyChuky-Black.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'scream';
+    src: url('/css/Fonts/ScreamAgain.woff2')format('woff2'),
+        url('/css/Fonts/ScreamAgain.woff') format('woff');
+}
+
 body{
     background-color: #6B2D2B;
     margin:0;
     padding:0;
 
 }
+
 #board{
     position:relative;
     margin:50px auto;
@@ -18,5 +37,24 @@ body{
    
 }
 .zombie{
-   background-color: #60A885; 
+   background-color: hsl(151, 29%, 52%); 
+}
+.score{
+    position:absolute;
+    font-family: 'scream';
+    
+  
+    color: #d9fa3296;
+    text-align: center;
+    font-size: 12px;
+    
+
+    
+    
+}
+.score p{
+    margin: -15px;
+    font-size: 20px;
+    
+    
 }

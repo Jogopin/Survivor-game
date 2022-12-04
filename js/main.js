@@ -189,13 +189,15 @@ class Zombie extends ELementOnBoard{
 
 class Game {
   constructor() {
-    this.boarWidth=800
+    this.boardWidth=800
     this.boardHeight=600
-
+    this.units = `px`;
     this.player = null;
     this.zombies = [];
 
     this.timeInSeconds = 0 //total time in seconds
+
+    this.scoreElem=null
 
     this.fps = 50 // frames per second, note when 60fps, a warning appears
     this.globalInterval =null
@@ -207,6 +209,7 @@ class Game {
     this.player = new Player(20, 20, 4);
     this.zombies.push(new Zombie(30, 30, 2))
     this.eventListeners()
+    this.createScore()
 
     let intervalCounter = 0;
     this.timeInSeconds = 0
@@ -218,7 +221,7 @@ class Game {
       //calculates total of Seconds passed
       if (intervalCounter % this.fps === 0) {
         this.timeInSeconds++;
-        console.log(this.timeInSeconds, `s`);
+        this.editScore();
       }
       //player movement depending of player.pressedKeyArray
       if (this.player.pressedKeyArray[0]) this.player.move(`up`);
@@ -287,6 +290,58 @@ class Game {
 
     //remove the player from the game and HTML
     this.player.domElem.remove()
+
+    
+  }
+  createScore(){
+
+    let scoreWidth =0
+    let scoreHeight=0
+     //getting the dom element 
+    this.scoreElem = document.querySelector(`.score`)
+    
+    //add properties to the element
+    scoreWidth= this.boardWidth*0.1 //10% the size of the board
+    scoreHeight=this.boardHeight*0.1
+
+    this.scoreElem.style.width=scoreWidth + this.units
+    this.scoreElem.style.height=scoreHeight + this.units
+    
+    
+    
+    
+    // place the element on the board
+    this.scoreElem.style.bottom=(this.boardHeight-scoreHeight -scoreHeight/3 )+this.units
+    this.scoreElem.style.left=(this.boardWidth -scoreWidth-scoreWidth/4)+this.units
+
+    
+  }
+  editScore(){
+   
+    let points= document.querySelector(`#board div p`)
+    points.innerText = `${this.timeInSeconds}`
+
+  }
+  showTime(){
+    let minutes= 0
+    let seconds =0
+    if(this.timeInSeconds%60===0){minutes++}
+    let textTime= `${this.computeTwoDigitNumber(minutes)}:${(seconds)}}`
+    
+    return textTime
+    
+    
+  
+  }
+  computeTwoDigitNumber(value) {
+        
+    let twoDig= `000` + new String(value) 
+    
+    if(twoDig.length>2){
+      return twoDig.slice(3,5)
+    }
+
+    return twoDig
   }
 }  
 
