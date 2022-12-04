@@ -145,15 +145,15 @@ class Zombie extends ELementOnBoard{
         return this.coordXY
 
     }
-    move(){
+    moveTowards(elem){
         //the hypotenuse is the absolute distance between the player and the zombie 
-        let hypotenuse=Math.sqrt((player.coordXY[0]-this.coordXY[0])**2+(player.coordXY[1]-this.coordXY[1])**2)
+        let hypotenuse=Math.sqrt((elem.coordXY[0]-this.coordXY[0])**2+(elem.coordXY[1]-this.coordXY[1])**2)
         // the distance in the X-axis between the zombie and the player is D(x)=hypotenuse*cos(angle)
         // the distance in the Y-axis between the zombie and the player is D(y)=hypotenuse*sen(angle)
 
         // cosAng and senAng are the cosine and sine of the angle formed by the hypotenuse and x-axis
-        let cosAng=(player.coordXY[0]-this.coordXY[0])/hypotenuse
-        let senAng=(player.coordXY[1]-this.coordXY[1])/hypotenuse
+        let cosAng=(elem.coordXY[0]-this.coordXY[0])/hypotenuse
+        let senAng=(elem.coordXY[1]-this.coordXY[1])/hypotenuse
 
 
         // the function of a straight line is X=a*t+Xo and Y=b*t+Yo where a=Vx, b=Vy, Xo= this.coordXY[0] and Yo=this.coordXY[1] (initial position)
@@ -183,86 +183,109 @@ class Zombie extends ELementOnBoard{
       }
 }
 
+class Game {
+  constructor() {
+    this.boarWidth=800
+    this.boardHeight=600
+
+    this.player = null;
+    this.zombies = [];
+
+    this.timeInSeconds = 0 //total time in seconds
+
+    this.fps = 50 // frames per second, note when 60fps, a warning appears
+    this.globalInterval =null
+    this.intervalDelay = 1000 / this.fps;
+  }
+  startGame() {
 
 
+    this.player = new Player(20, 20, 4);
+    this.eventListeners()
 
-const player = new Player(20,20,4)
-const zombies = []
-
-
-
-// **********************************************eventlistener
-
-//change  the elements inside player.pressedKeyArray when we press one Arrow Key 
-document.addEventListener(`keydown`, (e) => {
-    //console.log(e.key) // if I keep pressed one key and  press another one, it will console log the second one
-    if(e.key===`ArrowUp`){
-        player.pressedKeyArray[0]=true
-        
-    }else if(e.key===`ArrowRight`){
-        player.pressedKeyArray[1]=true
-    }else if(e.key===`ArrowDown`){
-        player.pressedKeyArray[2]=true
-    }else if(e.key===`ArrowLeft`){
-        player.pressedKeyArray[3]=true
-    }
-});
-
-// only when we stop pressing the key, it will change to false  the element in player.pressedKeyArray
-document.addEventListener(`keyup`, (e) => {
+    let intervalCounter = 0;
+    this.timeInSeconds = 0
+    //globalInterval, it sets the framerate at which everything moves
     
-    if(e.key===`ArrowUp`){
-        player.pressedKeyArray[0]=false
-        //console.log(player.pressedKeyArray) 
-    }else if(e.code===`ArrowRight`){
-       // console.log(player.pressedKeyArray)
-        player.pressedKeyArray[1]=false
-    }else if(e.code===`ArrowDown`){
-        player.pressedKeyArray[2]=false
-    }else if(e.code===`ArrowLeft`){
-        player.pressedKeyArray[3]=false
-    }
-});
+    this.globalInterval = setInterval(() => {
+      intervalCounter++;
 
-//**************************************************** */
-
+      //calculates total of Seconds passed
+      if (intervalCounter % this.fps === 0) {
+        this.timeInSeconds++;
+        console.log(this.timeInSeconds, `s`);
+      }
+      //player movement depending of player.pressedKeyArray
+      if (this.player.pressedKeyArray[0]) this.player.move(`up`);
+      if (this.player.pressedKeyArray[1]) this.player.move(`right`);
+      if (this.player.pressedKeyArray[2]) this.player.move(`down`);
+      if (this.player.pressedKeyArray[3]) this.player.move(`left`);
 
 
-let timeInSeconds = 0 //total time in seconds
-const fps=50 // frames per second, note when 60fps, a warning appears
-let intervalCounter=0
-const intervalDelay= 1000/fps
+      //zombies every 4 sec
+      if (intervalCounter % (4 * this.fps) === 0) {
+        this.zombies.push(new Zombie(30, 30, 2));
+       
+      }
+      //movement every 3 frames towards the player
+      if (intervalCounter % 3 === 0) {
+        this.zombies.forEach((zombie) => {
+          zombie.moveTowards(this.player);
+          zombie.collitionDetector(this.player, zombie);
+        });
+      }
+    }, this.intervalDelay);
 
-
-//globalInterval, it sets the framerate at which everything moves
-
-const globalInterval = setInterval(() => {
-
-  intervalCounter++;
-
-  //calculates total of Seconds passed
-  if (intervalCounter % fps === 0) {
-    timeInSeconds++;
-    console.log(timeInSeconds, `s`);
-  }
-  //player movement depending of player.pressedKeyArray
-  if (player.pressedKeyArray[0]) player.move(`up`);
-  if (player.pressedKeyArray[1]) player.move(`right`);
-  if (player.pressedKeyArray[2]) player.move(`down`);
-  if (player.pressedKeyArray[3]) player.move(`left`);
-
-  //zombies every 4 sec 
-  if (intervalCounter % (4*fps) === 0) {
-    zombies.push(new Zombie(30, 30, 2));
-    console.log("zombie created")
-  }
-  if (intervalCounter%3===0){
-    zombies.forEach((zombie)=>{
-    zombie.move()
-    zombie.collitionDetector(player,zombie)
-    })
   }
 
-  
-}, intervalDelay);
+  eventListeners() {
+    // **********************************************eventlistener
+
+    //change  the elements inside player.pressedKeyArray when we press one Arrow Key
+    document.addEventListener(`keydown`, (e) => {
+      //console.log(e.key) // if I keep pressed one key and  press another one, it will console log the second one
+      if (e.key === `ArrowUp`) {
+        this.player.pressedKeyArray[0] = true;
+      } else if (e.key === `ArrowRight`) {
+        this.player.pressedKeyArray[1] = true;
+      } else if (e.key === `ArrowDown`) {
+        this.player.pressedKeyArray[2] = true;
+      } else if (e.key === `ArrowLeft`) {
+        this.player.pressedKeyArray[3] = true;
+      }
+    });
+
+    // only when we stop pressing the key, it will change to false  the element in player.pressedKeyArray
+    document.addEventListener(`keyup`, (e) => {
+      if (e.key === `ArrowUp`) {
+        this.player.pressedKeyArray[0] = false;
+        
+      } else if (e.code === `ArrowRight`) {
+        
+        this.player.pressedKeyArray[1] = false;
+      } else if (e.code === `ArrowDown`) {
+        this.player.pressedKeyArray[2] = false;
+      } else if (e.code === `ArrowLeft`) {
+        this.player.pressedKeyArray[3] = false;
+      }
+    });
+
+    //**************************************************** */
+  }
+}  
+
+
+const game =new Game()
+game.startGame()
+
+
+
+
+
+
+
+
+
+
+
 
