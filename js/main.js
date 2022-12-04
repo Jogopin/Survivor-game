@@ -196,8 +196,10 @@ class Game {
     this.zombies = [];
 
     this.timeInSeconds = 0 //total time in seconds
-
-    this.scoreElem=null
+    
+    this.scoreElem=document.querySelector(`#board div p`)
+    this.score=0
+    
 
     this.fps = 50 // frames per second, note when 60fps, a warning appears
     this.globalInterval =null
@@ -221,7 +223,7 @@ class Game {
       //calculates total of Seconds passed
       if (intervalCounter % this.fps === 0) {
         this.timeInSeconds++;
-        this.editScore();
+        this.scoreElem.innerText = `${this.scoreTotal()}`;
       }
       //player movement depending of player.pressedKeyArray
       if (this.player.pressedKeyArray[0]) this.player.move(`up`);
@@ -284,49 +286,54 @@ class Game {
   }
   stopGame(){
     clearInterval(this.globalInterval)
-    alert(` -----Game Over----
-        dont let them eat you!!!!!`)
 
 
-    //remove the player from the game and HTML
-    this.player.domElem.remove()
-
-    
+    // create element
+    let gameOverElem= document.createElement(`div`)
+    //add properties
+    gameOverElem.className=`game-over`
+    gameOverElem.innerHTML=`
+    <h2>GAME OVER</h2>
+    <h3>Score:  ${this.scoreTotal()}&emsp;&emsp;&emsp;&emsp;&emsp;<span>Time : ${this.showTime()}</span></h3>   
+    <button class="btn"id="replay">Replay!!!</button>
+    `
+    //place the element
+    document.querySelector("#board").appendChild(gameOverElem) 
+   
   }
   createScore(){
 
-    let scoreWidth =0
-    let scoreHeight=0
-     //getting the dom element 
-    this.scoreElem = document.querySelector(`.score`)
+    let scoreBoxWidth =0
+    let scoreBoxHeight=0
+    let scoreBoxElem= document.querySelector(`.score`)
     
     //add properties to the element
-    scoreWidth= this.boardWidth*0.1 //10% the size of the board
-    scoreHeight=this.boardHeight*0.1
+    scoreBoxWidth = this.boardWidth*0.1 //10% the size of the board
+    scoreBoxHeight=this.boardHeight*0.1
 
-    this.scoreElem.style.width=scoreWidth + this.units
-    this.scoreElem.style.height=scoreHeight + this.units
+    scoreBoxElem.style.width=scoreBoxWidth + this.units
+    scoreBoxElem.style.height=scoreBoxHeight + this.units
     
     
     
     
     // place the element on the board
-    this.scoreElem.style.bottom=(this.boardHeight-scoreHeight -scoreHeight/3 )+this.units
-    this.scoreElem.style.left=(this.boardWidth -scoreWidth-scoreWidth/4)+this.units
+    scoreBoxElem.style.bottom=(this.boardHeight-scoreBoxHeight -scoreBoxHeight/3 )+this.units
+    scoreBoxElem.style.left=(this.boardWidth -scoreBoxWidth-scoreBoxWidth/4)+this.units
 
     
   }
-  editScore(){
+  scoreTotal(){
    
-    let points= document.querySelector(`#board div p`)
-    points.innerText = `${this.timeInSeconds}`
+    this.score=this.timeInSeconds
+    return this.score
 
   }
   showTime(){
-    let minutes= 0
-    let seconds =0
-    if(this.timeInSeconds%60===0){minutes++}
-    let textTime= `${this.computeTwoDigitNumber(minutes)}:${(seconds)}}`
+    let minutes= Math.floor(this.timeInSeconds/60)
+    let seconds =this.timeInSeconds%60
+    
+    let textTime= `${this.computeTwoDigitNumber(minutes)}<span>m</span> : ${this.computeTwoDigitNumber(seconds)}<span>s</span>`
     
     return textTime
     
@@ -335,10 +342,10 @@ class Game {
   }
   computeTwoDigitNumber(value) {
         
-    let twoDig= `000` + new String(value) 
+    let twoDig= `0` + new String(value) 
     
     if(twoDig.length>2){
-      return twoDig.slice(3,5)
+      return twoDig.slice(1,3)
     }
 
     return twoDig
