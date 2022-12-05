@@ -171,19 +171,29 @@ class Zombie extends ELementOnBoard {
     }
   }
 }
+class ZombieB extends Zombie{
+  constructor(width,height){
+    super(width, height);
+    this.steps =5
+    this.domElem.className = `zombie zombieB`;
+
+    this.changeCoordinates(this.randomPosition());
+
+  }
+}
 class Bullet extends ELementOnBoard {
   constructor(directionCoordXY, width, height, steps) {
     super(width, height, steps);
     this.directionCoordXY = directionCoordXY;
 
-    //  deep copy of the array otherwise wont work
+    //  important: prepare a deep copy of the coordinates of the player
     this.coordXY[0] = game.player.coordXY[0];
     this.coordXY[1] = game.player.coordXY[1];
 
     this.domElem.className = `bullet`;
 
     this.angles = this.calculateSenCos(this.directionCoordXY);
-    // this.createElement(`bullet`)
+    
     this.changeCoordinates(game.player.coordXY);
   }
   move() {
@@ -280,6 +290,22 @@ class Game {
       if (intervalCounter % (4 * this.fps) === 0) {
         this.zombies.push(new Zombie(30, 30, 2));
       }
+      // faster zombies after 12 sec every 3 sec
+      if ( this.timeInSeconds>12 && intervalCounter % (3 * this.fps) === 0) {
+        this.zombies.push(new Zombie(30, 30, 4));
+      }
+      //wave of 5 zombies every 15seconds
+      if (intervalCounter % (15 * this.fps) === 0) {
+        for(let i=0;i<5;i++){
+          let randomSpeed=Math.random()*5
+          this.zombies.push(new Zombie(30, 30, randomSpeed));
+        }
+      }
+      //zombies B every 5 secs
+      if(intervalCounter%(5*this.fps)===0){
+        this.zombies.push(new ZombieB(25,25))
+      }
+
       //movement every 1 frame towards the player
       if (intervalCounter % 1 === 0) {
         this.zombies.forEach((zombie) => {
@@ -290,7 +316,8 @@ class Game {
         });
       }
 
-      //--------bullets movement
+      //------------bullets
+      //remove bullets out of the board 
       this.bullets.forEach((elem, index) => {
         elem.move();
         if (
@@ -364,7 +391,7 @@ class Game {
         this.boardHeight + (mouseCoordXYWindow.top - e.pageY),
       ];
 
-      game.bullets.push(new Bullet(mouseCoordXY, 5, 5, 5));
+      game.bullets.push(new Bullet(mouseCoordXY, 5, 5, 8));
     };
     let boardElem = document.querySelector(`#board`);
 
@@ -435,7 +462,7 @@ class Game {
     scoreBoxElem.style.left =
       this.boardWidth - scoreBoxWidth - scoreBoxWidth / 4 + this.units;
   }
-  editScore() {}
+  
   scoreTotal() {
     this.score = this.timeInSeconds + this.zombiesKilled * 10;
     return this.score;

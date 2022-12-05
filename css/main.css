@@ -41,6 +41,9 @@ body{
 .zombie{
    background-color: hsl(151, 29%, 52%); 
 }
+.zombieB{
+    background-color: #6db92e ;
+}
 
 /* score */
 .score{
