@@ -235,6 +235,23 @@ class Bullet extends ELementOnBoard{
     this.domElem.style.left = coordinatesXY[0] + this.units;
     this.domElem.style.bottom = coordinatesXY[1] + this.units;
   }
+  collitionDetector(elem1,elem2){
+        
+        
+    if (
+        elem1.coordXY[0] < elem2.coordXY[0] + elem2.width &&
+        elem1.coordXY[0] + elem1.width > elem2.coordXY[0] &&
+        elem1.coordXY[1] < elem2.coordXY[1] + elem2.height &&
+        elem1.height + elem1.coordXY[1] > elem2.coordXY[1]
+      ) {
+        
+       return true
+
+      }else{
+
+        return false
+      }
+  }
   
 }
 
@@ -257,13 +274,17 @@ class Game {
     this.intervalDelay = 1000 / this.fps;
 
     this.bullets= []
+
+
+    this.zombiesKilled=0
   }
   startGame() {
 
 
     this.player = new Player(20, 20, 4);
     this.zombies.push(new Zombie(30, 30, 2))
-    
+    this.zombiesKilled=0
+
     this.eventListeners()
     this.createScore()
 
@@ -313,14 +334,31 @@ class Game {
           elem.domElem.remove();
           this.bullets.splice(index, 1);
         }
-      }); 
-    },this.intervalDelay);
+      });
+      //------------bullets collition detection
+      this.bullets.forEach((bullet,indexBullet) => {
+        this.zombies.forEach((zombie,indexZombie) => {
+          if(bullet.collitionDetector(bullet,zombie)){
+            //remove the zombie
+            zombie.domElem.remove()
+            this.zombies.splice(indexZombie,1)
+            //remove the bullet
+            bullet.domElem.remove()
+            this.bullets.splice(indexBullet,1)
+            //score points
+
+            this.zombiesKilled ++
+            
+          }
+        });
+      });
+    }, this.intervalDelay);
 
   }
 
   eventListeners() {
-    // **********************************************eventlistener
-
+    
+    //****************player movement****************************
     //change  the elements inside player.pressedKeyArray when we press one Arrow Key
     document.addEventListener(`keydown`, (e) => {
       //console.log(e.key) // if I keep pressed one key and  press another one, it will console log the second one
@@ -349,7 +387,7 @@ class Game {
         this.player.pressedKeyArray[3] = false;
       }
     });
-    //bullets eventlistener
+    //*********************bullets
     let boardElem = document.querySelector(`#board`);
 
     boardElem.addEventListener(`click`, (e) => {
@@ -396,7 +434,7 @@ class Game {
       })
     }  
   createScore(){
-
+    
     let scoreBoxWidth =0
     let scoreBoxHeight=0
     let scoreBoxElem= document.querySelector(`.score`)
@@ -417,9 +455,12 @@ class Game {
 
     
   }
+  editScore(){
+
+  }
   scoreTotal(){
    
-    this.score=this.timeInSeconds
+    this.score=this.timeInSeconds + this.zombiesKilled*10
     return this.score
 
   }
