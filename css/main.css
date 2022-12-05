@@ -126,3 +126,8 @@ body{
     font-size: 23px;
     cursor:pointer;
 }
+
+.bullet{
+    background-color: black;
+    
+}

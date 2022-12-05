@@ -168,8 +168,7 @@ class Zombie extends ELementOnBoard{
         this.changeCoordinates(this.coordXY)
     }
     collitionDetector(elem1,elem2){
-        elem1.coordXY
-        elem2.coordXY
+        
         
         if (
             elem1.coordXY[0] < elem2.coordXY[0] + elem2.width &&
@@ -185,6 +184,58 @@ class Zombie extends ELementOnBoard{
             return false
           }
       }
+}
+class Bullet extends ELementOnBoard{
+  constructor(directionCoordXY,width,height,steps){
+    super(width,height,steps)
+    this.directionCoordXY=directionCoordXY
+    
+    //  deep copy of the array otherwise wont work
+    this.coordXY[0]=game.player.coordXY[0]
+    this.coordXY[1]=game.player.coordXY[1]
+    
+    this.domElem.className=`bullet`
+    
+    this.angles=this.calculateMovementFunction(this.directionCoordXY)
+    // this.createElement(`bullet`)
+    this.changeCoordinates(game.player.coordXY)
+
+    
+    
+    
+    
+    
+    
+  }
+  move(){
+    this.coordXY[0]=this.coordXY[0]+this.steps*this.angles[0]
+
+    this.coordXY[1]=this.coordXY[1]+this.steps*this.angles[1]
+   
+    this.changeCoordinates(this.coordXY)
+    
+     
+    
+    
+  }
+  calculateMovementFunction(mouseCoordXY){
+    
+      //same aproach as before with zombie class, but we need this only once
+      let hypotenuse=Math.sqrt((mouseCoordXY[0]-this.coordXY[0])**2+(mouseCoordXY[1]-this.coordXY[1])**2)
+      
+      let cosAng=(mouseCoordXY[0]-this.coordXY[0])/hypotenuse
+      let senAng=(mouseCoordXY[1]-this.coordXY[1])/hypotenuse
+
+      return [cosAng,senAng]
+     
+  }
+  changeCoordinates(coordinatesXY) {
+
+
+    this.domElem.style.left = coordinatesXY[0] + this.units;
+    this.domElem.style.bottom = coordinatesXY[1] + this.units;
+  }
+  
 }
 
 class Game {
@@ -204,17 +255,22 @@ class Game {
     this.fps = 50 // frames per second, note when 60fps, a warning appears
     this.globalInterval =null
     this.intervalDelay = 1000 / this.fps;
+
+    this.bullets= []
   }
   startGame() {
 
 
     this.player = new Player(20, 20, 4);
     this.zombies.push(new Zombie(30, 30, 2))
+    
     this.eventListeners()
     this.createScore()
 
     let intervalCounter = 0;
     this.timeInSeconds = 0
+
+
     //globalInterval, it sets the framerate at which everything moves
     
     this.globalInterval = setInterval(() => {
@@ -231,21 +287,33 @@ class Game {
       if (this.player.pressedKeyArray[2]) this.player.move(`down`);
       if (this.player.pressedKeyArray[3]) this.player.move(`left`);
 
-
       //zombies every 4 sec
       if (intervalCounter % (4 * this.fps) === 0) {
         this.zombies.push(new Zombie(30, 30, 2));
-       
       }
-      //movement every 3 frames towards the player
-      if (intervalCounter % 3 === 0) {
+      //movement every 1 frame towards the player
+      if (intervalCounter % 1 === 0) {
         this.zombies.forEach((zombie) => {
           zombie.moveTowards(this.player);
-          if(zombie.collitionDetector(this.player, zombie)){
-            game.stopGame()
-          };
+          if (zombie.collitionDetector(this.player, zombie)) {
+            game.stopGame();
+          }
         });
       }
+
+      //--------bullets movement
+      this.bullets.forEach((elem, index) => {
+        elem.move();
+        if (
+          elem.coordXY[0] > this.boardWidth ||
+          elem.coordXY[0] < 0 ||
+          elem.coordXY[1] > this.boardHeight ||
+          elem.coordXY[1] < 0
+        ) {
+          elem.domElem.remove();
+          this.bullets.splice(index, 1);
+        }
+      }); 
     },this.intervalDelay);
 
   }
@@ -281,6 +349,19 @@ class Game {
         this.player.pressedKeyArray[3] = false;
       }
     });
+    //bullets eventlistener
+    let boardElem = document.querySelector(`#board`);
+
+    boardElem.addEventListener(`click`, (e) => {
+      let mouseCoordXYWindow = boardElem.getBoundingClientRect();//coordinates of themouse relatives to the screen
+
+      const mouseCoordXY = [ //converts the coordinates of the mouse in to the axis sistem we are using
+        e.pageX - mouseCoordXYWindow.left,
+        this.boardHeight + (mouseCoordXYWindow.top - e.pageY),
+      ];
+
+      game.bullets.push(new Bullet(mouseCoordXY,5,5,5));
+    });
 
     //**************************************************** */
   }
@@ -288,7 +369,7 @@ class Game {
     clearInterval(this.globalInterval)
 
 
-    // create element
+    // create div element
     let gameOverElem= document.createElement(`div`)
     //add properties
     gameOverElem.className=`game-over`
@@ -300,7 +381,7 @@ class Game {
     //place the element
     document.querySelector("#board").appendChild(gameOverElem) 
 
-    // replay btn
+    // replay btn functionality
 
     let replay = document.querySelector("#replay")
     replay.addEventListener(`click`,()=>{
@@ -313,10 +394,7 @@ class Game {
       this.startGame()
       
       })
-    }
-   
-  
-  
+    }  
   createScore(){
 
     let scoreBoxWidth =0
@@ -367,12 +445,12 @@ class Game {
     return twoDig
   }
 
+
 }  
 
 
 const game =new Game()
 game.startGame()
-
 
 
 
