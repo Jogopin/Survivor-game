@@ -23,7 +23,9 @@ body{
 
 }
 
+
 #board{
+    cursor: url(/css/cursor/cursor1.png),auto;
     position:relative;
     margin:50px auto;
     width: 800px;
