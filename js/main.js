@@ -284,7 +284,7 @@ class Game {
     this.player = new Player(20, 20, 4);
     this.zombies.push(new Zombie(30, 30, 2))
     this.zombiesKilled=0
-
+    this.bullets=[]
     this.eventListeners()
     this.createScore()
 
@@ -425,8 +425,12 @@ class Game {
     replay.addEventListener(`click`,()=>{
       this.timeInSeconds=0
       this.zombies.forEach((zombie)=>{zombie.domElem.remove()})
-      this.player.domElem.remove()
       this.zombies=[]
+      this.bullets.forEach((bullet)=>{bullet.domElem.remove()})
+      this.bullets=[]
+
+
+      this.player.domElem.remove()
       this.score=0
       gameOverElem.remove()
       this.startGame()
