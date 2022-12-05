@@ -171,14 +171,13 @@ class Zombie extends ELementOnBoard {
     }
   }
 }
-class ZombieB extends Zombie{
-  constructor(width,height){
+class ZombieB extends Zombie {
+  constructor(width, height) {
     super(width, height);
-    this.steps =5
+    this.steps = 5;
     this.domElem.className = `zombie zombieB`;
 
     this.changeCoordinates(this.randomPosition());
-
   }
 }
 class Bullet extends ELementOnBoard {
@@ -193,7 +192,7 @@ class Bullet extends ELementOnBoard {
     this.domElem.className = `bullet`;
 
     this.angles = this.calculateSenCos(this.directionCoordXY);
-    
+
     this.changeCoordinates(game.player.coordXY);
   }
   move() {
@@ -256,10 +255,13 @@ class Game {
     this.zombiesKilled = 0;
 
     this.bulletEventListener = null;
-    this.playerEventListenerKeyup=null
-    this.playerEventListenerKeydown=null
+    this.playerEventListenerKeyup = null;
+    this.playerEventListenerKeydown = null;
+
+    this.startGameWindow()
   }
   startGame() {
+    
     this.player = new Player(20, 20, 4);
     this.zombies.push(new Zombie(30, 30, 2));
     this.zombiesKilled = 0;
@@ -291,19 +293,19 @@ class Game {
         this.zombies.push(new Zombie(30, 30, 2));
       }
       // faster zombies after 12 sec every 3 sec
-      if ( this.timeInSeconds>12 && intervalCounter % (3 * this.fps) === 0) {
+      if (this.timeInSeconds > 12 && intervalCounter % (3 * this.fps) === 0) {
         this.zombies.push(new Zombie(30, 30, 4));
       }
       //wave of 5 zombies every 15seconds
       if (intervalCounter % (15 * this.fps) === 0) {
-        for(let i=0;i<5;i++){
-          let randomSpeed=Math.random()*5
+        for (let i = 0; i < 5; i++) {
+          let randomSpeed = Math.random() * 5;
           this.zombies.push(new Zombie(30, 30, randomSpeed));
         }
       }
       //zombies B every 5 secs
-      if(intervalCounter%(5*this.fps)===0){
-        this.zombies.push(new ZombieB(25,25))
+      if (intervalCounter % (5 * this.fps) === 0) {
+        this.zombies.push(new ZombieB(25, 25));
       }
 
       //movement every 1 frame towards the player
@@ -317,7 +319,7 @@ class Game {
       }
 
       //------------bullets
-      //remove bullets out of the board 
+      //remove bullets out of the board
       this.bullets.forEach((elem, index) => {
         elem.move();
         if (
@@ -348,6 +350,24 @@ class Game {
       });
     }, this.intervalDelay);
   }
+  startGameWindow(){
+    let startGameElem = document.createElement(`div`);
+    //add properties
+    startGameElem.className = `start-game small-window`;
+    startGameElem.innerHTML = `
+    <h2>SURVIVOR</h2>
+    
+    <button class="btn"id="play">Play!!!</button>
+    `;
+    //place the element
+    document.querySelector("#board").appendChild(startGameElem);
+
+    let play = document.querySelector("#play");
+    play.addEventListener(`click`, () => {
+      this.startGame();
+      startGameElem.remove();
+    });
+  }
 
   eventListeners() {
     //****************player movement****************************
@@ -363,11 +383,10 @@ class Game {
       } else if (e.key === `ArrowLeft`) {
         this.player.pressedKeyArray[3] = true;
       }
-    }
-    
+    };
 
     // only when we stop pressing the key, it will change to false  the element in player.pressedKeyArray
-    this.playerEventListenerKeyup =(e) => {
+    this.playerEventListenerKeyup = (e) => {
       if (e.key === `ArrowUp`) {
         this.player.pressedKeyArray[0] = false;
       } else if (e.code === `ArrowRight`) {
@@ -377,9 +396,9 @@ class Game {
       } else if (e.code === `ArrowLeft`) {
         this.player.pressedKeyArray[3] = false;
       }
-    }
-    document.addEventListener(`keydown`,this.playerEventListenerKeydown);
-    document.addEventListener(`keyup`,this.playerEventListenerKeyup);
+    };
+    document.addEventListener(`keydown`, this.playerEventListenerKeydown);
+    document.addEventListener(`keyup`, this.playerEventListenerKeyup);
     //*********************bullets
 
     this.bulletEventListener = (e) => {
@@ -405,7 +424,7 @@ class Game {
     // create div element
     let gameOverElem = document.createElement(`div`);
     //add properties
-    gameOverElem.className = `game-over`;
+    gameOverElem.className = `game-over small-window`;
     gameOverElem.innerHTML = `
     <h2>GAME OVER</h2>
     <h3>Score:  ${this.scoreTotal()}&emsp;&emsp;&emsp;&emsp;&emsp;<span>Time : ${this.showTime()}</span></h3>   
@@ -436,8 +455,8 @@ class Game {
       //remove eventlisteners
       let boardElem = document.querySelector(`#board`);
       boardElem.removeEventListener(`click`, this.bulletEventListener);
-      document.removeEventListener(`keydown`,this.playerEventListenerKeydown);
-      document.removeEventListener(`keyup`,this.playerEventListenerKeyup);
+      document.removeEventListener(`keydown`, this.playerEventListenerKeydown);
+      document.removeEventListener(`keyup`, this.playerEventListenerKeyup);
 
       gameOverElem.remove();
 
@@ -452,7 +471,7 @@ class Game {
     //add properties to the element
     scoreBoxWidth = this.boardWidth * 0.1; //10% the size of the board
     scoreBoxHeight = this.boardHeight * 0.1;
-
+    scoreBoxElem.style.visibility = `visible`;
     scoreBoxElem.style.width = scoreBoxWidth + this.units;
     scoreBoxElem.style.height = scoreBoxHeight + this.units;
 
@@ -462,7 +481,7 @@ class Game {
     scoreBoxElem.style.left =
       this.boardWidth - scoreBoxWidth - scoreBoxWidth / 4 + this.units;
   }
-  
+
   scoreTotal() {
     this.score = this.timeInSeconds + this.zombiesKilled * 10;
     return this.score;
@@ -489,4 +508,3 @@ class Game {
 }
 
 const game = new Game();
-game.startGame();
