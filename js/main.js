@@ -88,6 +88,7 @@ class ELementOnBoard {
 }
 
 class Player extends ELementOnBoard {
+
   constructor(width, height, steps) {
     super(width, height, steps);
 
@@ -100,6 +101,21 @@ class Player extends ELementOnBoard {
     //note: when 2 keys are pressed both values in the array are true
 
     this.changeCoordinates(this.coordXY);
+    this.rotateFace()
+  }
+  rotateFace(){
+    
+    let playerBoundingRect = this.domElem.getBoundingClientRect();
+    let playerCenter= {
+        x: playerBoundingRect.left + playerBoundingRect.width/2, 
+        y: playerBoundingRect.top + playerBoundingRect.height/2
+    };
+    
+    document.addEventListener("mousemove", e => {
+        let angle = Math.atan2(e.pageX - playerCenter.x, - (e.pageY - playerCenter.y) )*(180 / Math.PI);      
+        this.domElem.style.transform = `rotate(${angle}deg)`;  
+    })
+
   }
 }
 
@@ -107,8 +123,13 @@ class Zombie extends ELementOnBoard {
   constructor(width, height, steps) {
     super(width, height, steps);
     this.domElem.className = `zombie`;
-
+    this.randomFace()
     this.changeCoordinates(this.randomPosition());
+  }
+  randomFace(){
+    let n =Math.floor(Math.random()*3 +1)
+    this.domElem.style.backgroundImage=`url(/css/img/zombie${n}.png)`
+    
   }
   randomPosition() {
     let posibility = Math.floor(Math.random() * 4); // 4==> one per each border
@@ -186,14 +207,14 @@ class Bullet extends ELementOnBoard {
     this.directionCoordXY = directionCoordXY;
 
     //  important: prepare a deep copy of the coordinates of the player
-    this.coordXY[0] = game.player.coordXY[0];
-    this.coordXY[1] = game.player.coordXY[1];
+    this.coordXY[0] = game.player.coordXY[0]+game.player.width/2;
+    this.coordXY[1] = game.player.coordXY[1]+game.player.height/2;
 
     this.domElem.className = `bullet`;
 
     this.angles = this.calculateSenCos(this.directionCoordXY);
 
-    this.changeCoordinates(game.player.coordXY);
+    this.changeCoordinates(this.coordXY);
   }
   move() {
     this.coordXY[0] = this.coordXY[0] + this.steps * this.angles[0];
@@ -262,12 +283,14 @@ class Game {
   }
   startGame() {
     
-    this.player = new Player(20, 20, 4);
+    this.player = new Player(30, 30, 4);
     this.zombies.push(new Zombie(30, 30, 2));
     this.zombiesKilled = 0;
     this.bullets = [];
     this.eventListeners();
     this.createScore();
+
+
 
     let intervalCounter = 0;
     this.timeInSeconds = 0;
@@ -290,22 +313,22 @@ class Game {
 
       //zombies every 4 sec
       if (intervalCounter % (4 * this.fps) === 0) {
-        this.zombies.push(new Zombie(30, 30, 2));
+        this.zombies.push(new Zombie(40, 40, 2));
       }
       // faster zombies after 12 sec every 3 sec
       if (this.timeInSeconds > 12 && intervalCounter % (3 * this.fps) === 0) {
         this.zombies.push(new Zombie(30, 30, 4));
       }
-      //wave of 5 zombies every 15seconds
+      //wave of 5 zombies every 15seconds 
       if (intervalCounter % (15 * this.fps) === 0) {
         for (let i = 0; i < 5; i++) {
           let randomSpeed = Math.random() * 5;
-          this.zombies.push(new Zombie(30, 30, randomSpeed));
+          setTimeout(()=>this.zombies.push(new Zombie(30, 30, randomSpeed)),500*i)
         }
       }
       //zombies B every 5 secs
       if (intervalCounter % (5 * this.fps) === 0) {
-        this.zombies.push(new ZombieB(25, 25));
+        this.zombies.push(new ZombieB(40, 40));
       }
 
       //movement every 1 frame towards the player
@@ -336,8 +359,13 @@ class Game {
       this.bullets.forEach((bullet, indexBullet) => {
         this.zombies.forEach((zombie, indexZombie) => {
           if (bullet.collitionDetector(bullet, zombie)) {
+            
+            zombie.domElem.style.backgroundImage= `url(/css/img/blood.png)`
+            zombie.domElem.style.filter= `brightness(50%)`
             //remove the zombie
-            zombie.domElem.remove();
+
+            setTimeout(()=>{zombie.domElem.remove()},2000)
+            
             this.zombies.splice(indexZombie, 1);
             //remove the bullet
             bullet.domElem.remove();
@@ -508,3 +536,5 @@ class Game {
 }
 
 const game = new Game();
+
+

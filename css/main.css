@@ -26,6 +26,9 @@ body{
 
 #board{
     cursor: url(/css/cursor/cursor1.png),auto;
+   
+    
+    
     position:relative;
     margin:50px auto;
     width: 800px;
@@ -35,14 +38,21 @@ body{
 }
 .player{
     
-    background-color:#141313 ;
+    background-image: url(/css/img/player1.png) ;
+    background-size:contain;
+    z-index: 2;
+    
    
 }
 .zombie{
-   background-color: hsl(151, 29%, 52%); 
+   
+   
+   background-size:contain;
 }
 .zombieB{
-    background-color: #6db92e ;
+    
+    background-image: url(/css/img/zombieB.png);
+    background-size: contain;
 }
 
 /* score */
@@ -52,7 +62,7 @@ body{
     font-family: 'scream';
     
   
-    color: #d9fa3296;
+    color: #d9fa32;
     text-align: center;
     font-size: 12px;
     
@@ -135,7 +145,7 @@ body{
 }
 
 .bullet{
-    background-color: black;
+    background-color: rgb(0, 0, 0);
     
 }
 
