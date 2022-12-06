@@ -85,10 +85,7 @@ class ELementOnBoard {
         break;
     }
   }
-  getCoordinates(){
-    this.coordXY=[this.domElem.left,this.domElem.bottom]
-    
-  }
+
 }
 
 class Player extends ELementOnBoard {
@@ -109,6 +106,8 @@ class Player extends ELementOnBoard {
 
     this.gunChamber=10
     this.bulletsAvailable=1
+    this.timeBetweenShoot=0.5
+    this.chargingCounter=0
 
   }
   movesPlayer(){

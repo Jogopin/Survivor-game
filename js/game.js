@@ -40,8 +40,13 @@ class Game {
       updateScore();
 
       //player movement depending of player.pressedKeyArray
-
       game.player.movesPlayer();
+
+
+
+      //****************//
+      //****enemies****//
+      //***************//
 
       this.createZombiePerSec(4);
 
@@ -53,24 +58,22 @@ class Game {
 
       //zombies B every 5 secs
       this.createZombieFPerSec(5);
-      
+
       //create a boss
-      this.createZombieBoss(2);
-      if(this.zombiesBoss.length){
-        this.zombiesBoss.forEach((zombieBoss)=>{zombieBoss.giveBirthZombies(1)})
-            
-        }
-        
-        
+      this.createZombieBoss(15));
+      if (this.zombiesBoss.length) {
+        this.zombiesBoss.forEach((zombieBoss) => {
+          zombieBoss.giveBirthZombies(1);
+        });
+      }
+
       //movement every 1 frame towards the player
       this.movesZombies();
-      this.movesZombiesBoss()
+      this.movesZombiesBoss();
 
-
-      
-
-      //------------bullets
+      //****bullets****/
       reloadGun();
+      
 
       //remove bullets out of the board
       this.removeBulletsOutBoard();
@@ -185,9 +188,11 @@ class Game {
         e.pageX - mouseCoordXYWindow.left,
         this.boardHeight + (mouseCoordXYWindow.top - e.pageY),
       ];
-      if (this.player.bulletsAvailable > 0) {
+      //only shoots when has bullets
+      if (this.player.bulletsAvailable > 0 && this.player.chargingCounter>0) {
         game.bullets.push(new Bullet(mouseCoordXY, 5, 5, 8));
         this.player.bulletsAvailable--;
+        this.player.chargingCounter=0
       }
     };
 
@@ -307,9 +312,8 @@ class Game {
       }
     });
   }
+
   bulletsCollitionDetector() {
-
-
     this.bullets.forEach((bullet, indexBullet) => {
       this.zombies.forEach((zombie, indexZombie) => {
         if (collitionDetector(bullet, zombie)) {
@@ -333,28 +337,26 @@ class Game {
       });
       this.zombiesBoss.forEach((zombie, indexZombie) => {
         if (collitionDetector(bullet, zombie)) {
-          zombie.life--  
-          if (zombie.life===0){ 
-          zombie.domElem.style.backgroundImage = `url(/css/img/blood.png)`;
-          zombie.domElem.style.filter = `brightness(50%)`;
-          this.zombiesKilled+=200;
-          //remove the blood
-          setTimeout(() => {
-              zombie.domElem.remove();
-            }, 4000);
-            
-            this.zombiesBoss.splice(indexZombie, 1);
-        }  
-            
+          zombie.life--;
           //remove the bullet
           bullet.domElem.remove();
           this.bullets.splice(indexBullet, 1);
 
-          //score points
-          
+          if (zombie.life === 0) {
+            zombie.domElem.style.backgroundImage = `url(/css/img/blood.png)`;
+            zombie.domElem.style.filter = `brightness(50%)`;
+            //score points
+            this.zombiesKilled += 20;
+
+            //remove the blood
+            setTimeout(() => {
+              zombie.domElem.remove();
+            }, 4000);
+
+            this.zombiesBoss.splice(indexZombie, 1);
+          }
         }
       });
-      
     });
   }
 }
