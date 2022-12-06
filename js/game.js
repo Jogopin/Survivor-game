@@ -60,7 +60,7 @@ class Game {
       this.createZombieFPerSec(5);
 
       //create a boss
-      this.createZombieBoss(15));
+      this.createZombieBoss(15);
       if (this.zombiesBoss.length) {
         this.zombiesBoss.forEach((zombieBoss) => {
           zombieBoss.giveBirthZombies(1);
