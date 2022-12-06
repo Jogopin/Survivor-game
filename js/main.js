@@ -85,6 +85,10 @@ class ELementOnBoard {
         break;
     }
   }
+  getCoordinates(){
+    this.coordXY=[this.domElem.left,this.domElem.bottom]
+    
+  }
 }
 
 class Player extends ELementOnBoard {
@@ -102,7 +106,10 @@ class Player extends ELementOnBoard {
 
     this.changeCoordinates(this.coordXY);
     this.rotateFace()
-    
+
+    this.gunChamber=10
+    this.bulletsAvailable=1
+
   }
   movesPlayer(){
     if (this.pressedKeyArray[0]) this.move(`up`);
@@ -125,6 +132,9 @@ class Player extends ELementOnBoard {
     }
     
     document.addEventListener("mousemove",this.rotateFaceEventListener);
+
+  }
+  displayGunChamber(){
 
   }
 }
@@ -152,7 +162,7 @@ class Zombie extends ELementOnBoard {
         break;
       case 1:
         this.coordXY[0] = Math.random() * (800 - this.width);
-        this.coordXY[1] = 600 - this.height; // width
+        this.coordXY[1] = 600 - this.height; 
         break;
       case 2:
         this.coordXY[0] = 0;
@@ -200,7 +210,65 @@ class ZombieF extends Zombie {
     this.changeCoordinates(this.randomPosition());
   }
 }
+class BabyZombie extends ELementOnBoard{
+  constructor(fatherCoordXY,width, height, steps) {
+    super(width, height, steps);
+    this.domElem.className = `zombie baby-zombie`;
+    this.domElem.style.backgroundImage=`url(/css/img/zombieBoss.png)`
+    
+    //  important: prepare a deep copy of the coordinates of the player
+    this.coordXY[0] = fatherCoordXY[0]
+    this.coordXY[1] = fatherCoordXY[1]
 
+    this.origin=[this.coordXY[0],this.coordXY[1]]
+    this.changeCoordinates(this.origin);
+  }
+  moveTowards(elem) {
+    //the hypotenuse is the absolute distance between the player and the zombie
+    let hypotenuse = Math.sqrt(
+      (elem.coordXY[0] - this.coordXY[0]) ** 2 +
+        (elem.coordXY[1] - this.coordXY[1]) ** 2
+    );
+    // the distance in the X-axis between the zombie and the player is D(x)=hypotenuse*cos(angle)
+    // the distance in the Y-axis between the zombie and the player is D(y)=hypotenuse*sen(angle)
+
+    // cosAng and senAng are the cosine and sine of the angle formed by the hypotenuse and x-axis
+    let cosAng = (elem.coordXY[0] - this.coordXY[0]) / hypotenuse;
+    let senAng = (elem.coordXY[1] - this.coordXY[1]) / hypotenuse;
+
+    // the function of a straight line is X=a*t+Xo and Y=b*t+Yo where a=Vx, b=Vy, Xo= this.coordXY[0] and Yo=this.coordXY[1] (initial position)
+    // the  derivative of the functions are Vx=a and Vy=b
+    // the velocity towards the player (V(t)) is constant, Vx=V(t)cos(angle) and Vy=V(t)sen(angle)
+
+    // Vt=this.steps  and we are calculating for every interval--> t=1
+
+    //X=a*t+Xo and Y=b*t+Yo
+    this.coordXY[0] = this.steps * cosAng + this.coordXY[0];
+    this.coordXY[1] = +this.steps * senAng + this.coordXY[1];
+    this.changeCoordinates(this.coordXY);
+  }
+}
+class ZombieBoss extends Zombie{
+  constructor(width, height) {
+    super(width, height);
+    this.steps = 2;
+    this.life=10;
+    this.domElem.className = `zombie zombie-boss`;
+    this.domElem.style.backgroundImage=`url(/css/img/zombieBoss.png)`
+    
+    this.changeCoordinates(this.randomPosition());
+    this.elemCenter=[this.coordXY[0]+this.width/2,this.coordXY[1]+this.height/2]
+  }
+  giveBirthZombies(sec){
+    this.elemCenter=[this.coordXY[0]+this.width/2,this.coordXY[1]+this.height/2]
+    if (game.intervalCounter % (sec * game.fps) === 1) {
+        game.zombies.push(new BabyZombie(this.elemCenter,25,25,4));
+        
+    }
+  }
+  
+
+}
 
 class Bullet extends ELementOnBoard {
   constructor(directionCoordXY, width, height, steps) {
@@ -214,6 +282,7 @@ class Bullet extends ELementOnBoard {
     this.domElem.className = `bullet`;
 
     this.angles = this.calculateSenCos(this.directionCoordXY);
+    
 
     this.changeCoordinates(this.coordXY);
   }
@@ -254,3 +323,4 @@ class Bullet extends ELementOnBoard {
     }
   }
 }
+

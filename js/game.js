@@ -18,24 +18,20 @@ class Game {
     this.player = null;
     this.zombies = [];
     this.bullets = [];
+    this.zombiesBoss = [];
     this.zombiesKilled = 0;
 
-    //esto lo podria borrar
     this.bulletEventListener = null;
-    this.playerEventListenerKeyup = null;
-    this.playerEventListenerKeydown = null;
 
     this.startGameWindow();
-    this.loadNewGame()
-    
+    this.loadNewGame();
+
     this.attachPlayerEventListener();
   }
   startGame() {
-    
     this.zombies.push(new Zombie(30, 30, 2));
 
     this.intervalCounter = 0;
-    
 
     this.globalInterval = setInterval(() => {
       this.intervalCounter++;
@@ -57,15 +53,29 @@ class Game {
 
       //zombies B every 5 secs
       this.createZombieFPerSec(5);
-
+      
+      //create a boss
+      this.createZombieBoss(2);
+      if(this.zombiesBoss.length){
+        this.zombiesBoss.forEach((zombieBoss)=>{zombieBoss.giveBirthZombies(1)})
+            
+        }
+        
+        
       //movement every 1 frame towards the player
-      this.movesZombies()
+      this.movesZombies();
+      this.movesZombiesBoss()
+
+
+      
 
       //------------bullets
+      reloadGun();
+
       //remove bullets out of the board
-      this.removeBulletsOutBoard()
+      this.removeBulletsOutBoard();
       //------------bullets collition detection
-      this.bulletsCollitionDetector()
+      this.bulletsCollitionDetector();
     }, this.intervalDelay);
   }
   loadNewGame() {
@@ -74,8 +84,6 @@ class Game {
     this.zombiesKilled = 0;
     this.bullets = [];
     this.timeInSeconds = 0;
-    
-    
   }
   startGameWindow() {
     let startGameElem = document.createElement(`div`);
@@ -91,12 +99,14 @@ class Game {
     //event listener
     let play = document.querySelector("#play");
     play.addEventListener(`click`, () => {
-      this.player.domElem.remove() 
-      document.removeEventListener("mousemove",game.player.rotateFaceEventListener)
+      this.player.domElem.remove();
+      document.removeEventListener(
+        "mousemove",
+        game.player.rotateFaceEventListener
+      );
 
-      
       this.loadNewGame();
-      this.attachBulletEventListener();  
+      this.attachBulletEventListener();
       this.startGame();
       startGameElem.remove();
     });
@@ -175,8 +185,10 @@ class Game {
         e.pageX - mouseCoordXYWindow.left,
         this.boardHeight + (mouseCoordXYWindow.top - e.pageY),
       ];
-
-      game.bullets.push(new Bullet(mouseCoordXY, 5, 5, 8));
+      if (this.player.bulletsAvailable > 0) {
+        game.bullets.push(new Bullet(mouseCoordXY, 5, 5, 8));
+        this.player.bulletsAvailable--;
+      }
     };
 
     this.boardElem.addEventListener(`click`, this.bulletEventListener);
@@ -210,36 +222,44 @@ class Game {
       this.bullets.forEach((bullet) => {
         bullet.domElem.remove();
       });
+
+      this.zombiesBoss.forEach((zombie) => {
+        zombie.domElem.remove();
+      });
+      this.zombiesBoss = [];
+
       this.bullets = [];
 
       this.player.domElem.remove();
-      document.removeEventListener("mousemove",game.player.rotateFaceEventListener)
+      document.removeEventListener(
+        "mousemove",
+        game.player.rotateFaceEventListener
+      );
       this.score = 0;
 
-    
       gameOverElem.remove();
 
       //starts a new game
-      this.loadNewGame()
+      this.loadNewGame();
       this.startGame();
     });
   }
- 
+
   createZombiePerSec(sec) {
     if (this.intervalCounter % (sec * this.fps) === 0) {
       this.zombies.push(new Zombie(40, 40, 2));
     }
   }
-  createZombieFPerSec(sec){
+  createZombieFPerSec(sec) {
     if (this.intervalCounter % (sec * this.fps) === 0) {
-        this.zombies.push(new ZombieF(40, 40));
-      }
+      this.zombies.push(new ZombieF(40, 40));
+    }
   }
-  
-  createWaveOfZombies(numZombies,sec) {
+
+  createWaveOfZombies(numZombies, sec) {
     //wave of 5 zombies every 15seconds
     if (this.intervalCounter % (sec * this.fps) === 0) {
-      for (let i =numZombies; i < numZombies; i++) {
+      for (let i = numZombies; i < numZombies; i++) {
         let randomSpeed = Math.random() * 5;
         setTimeout(
           () => this.zombies.push(new Zombie(30, 30, randomSpeed)),
@@ -248,54 +268,94 @@ class Game {
       }
     }
   }
-  movesZombies(){
-    if (this.intervalCounter % 1 === 0) {
-        this.zombies.forEach((zombie) => {
-          zombie.moveTowards(this.player);
-          if (collitionDetector(this.player, zombie)) {
-            game.stopGame();
-          }
-        });
-      }
+  createZombieBoss(sec) {
+    if (this.intervalCounter % (sec * this.fps) === 0) {
+      this.zombiesBoss.push(new ZombieBoss(80, 80));
+    }
   }
-  removeBulletsOutBoard(){
-    this.bullets.forEach((elem, index) => {
-        elem.move();
-        if (
-          elem.coordXY[0] > this.boardWidth ||
-          elem.coordXY[0] < 0 ||
-          elem.coordXY[1] > this.boardHeight ||
-          elem.coordXY[1] < 0
-        ) {
-          elem.domElem.remove();
-          this.bullets.splice(index, 1);
+  movesZombies() {
+    if (this.intervalCounter % 1 === 0) {
+      this.zombies.forEach((zombie) => {
+        zombie.moveTowards(this.player);
+        if (collitionDetector(this.player, zombie)) {
+          game.stopGame();
         }
       });
+    }
   }
-  bulletsCollitionDetector(){
-    this.bullets.forEach((bullet, indexBullet) => {
-        this.zombies.forEach((zombie, indexZombie) => {
-          if (collitionDetector(bullet, zombie)) {
-            zombie.domElem.style.backgroundImage = `url(/css/img/blood.png)`;
-            zombie.domElem.style.filter = `brightness(50%)`;
-            
-            //remove the blood
-            setTimeout(() => {
-              zombie.domElem.remove();
-            }, 2000);
-
-            this.zombies.splice(indexZombie, 1);
-
-            //remove the bullet
-            bullet.domElem.remove();
-            this.bullets.splice(indexBullet, 1);
-            
-            //score points
-            this.zombiesKilled++;
-          }
-        });
+  movesZombiesBoss() {
+    if (this.intervalCounter % 1 === 0) {
+      this.zombiesBoss.forEach((zombie) => {
+        zombie.moveTowards(this.player);
+        if (collitionDetector(this.player, zombie)) {
+          game.stopGame();
+        }
       });
-    
+    }
+  }
+  removeBulletsOutBoard() {
+    this.bullets.forEach((elem, index) => {
+      elem.move();
+      if (
+        elem.coordXY[0] > this.boardWidth ||
+        elem.coordXY[0] < 0 ||
+        elem.coordXY[1] > this.boardHeight ||
+        elem.coordXY[1] < 0
+      ) {
+        elem.domElem.remove();
+        this.bullets.splice(index, 1);
+      }
+    });
+  }
+  bulletsCollitionDetector() {
+
+
+    this.bullets.forEach((bullet, indexBullet) => {
+      this.zombies.forEach((zombie, indexZombie) => {
+        if (collitionDetector(bullet, zombie)) {
+          zombie.domElem.style.backgroundImage = `url(/css/img/blood.png)`;
+          zombie.domElem.style.filter = `brightness(50%)`;
+
+          //remove the blood
+          setTimeout(() => {
+            zombie.domElem.remove();
+          }, 2000);
+
+          this.zombies.splice(indexZombie, 1);
+
+          //remove the bullet
+          bullet.domElem.remove();
+          this.bullets.splice(indexBullet, 1);
+
+          //score points
+          this.zombiesKilled++;
+        }
+      });
+      this.zombiesBoss.forEach((zombie, indexZombie) => {
+        if (collitionDetector(bullet, zombie)) {
+          zombie.life--  
+          if (zombie.life===0){ 
+          zombie.domElem.style.backgroundImage = `url(/css/img/blood.png)`;
+          zombie.domElem.style.filter = `brightness(50%)`;
+          this.zombiesKilled+=200;
+          //remove the blood
+          setTimeout(() => {
+              zombie.domElem.remove();
+            }, 4000);
+            
+            this.zombiesBoss.splice(indexZombie, 1);
+        }  
+            
+          //remove the bullet
+          bullet.domElem.remove();
+          this.bullets.splice(indexBullet, 1);
+
+          //score points
+          
+        }
+      });
+      
+    });
   }
 }
 

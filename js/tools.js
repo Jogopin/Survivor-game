@@ -5,11 +5,19 @@ const calculatesTimeInSec=function(){
       }
 }
 const updateScore = function () {
-  if (game.intervalCounter %  (0.5* game.fps) === 0) {
-    game.timeInSeconds++;
+  if (game.intervalCounter %  (0.5*game.fps) === 0) {
+    
     game.scoreElem.innerText = `${game.calculateScore()}`;
   }
 };
+const reloadGun=function(){
+    if(game.player.bulletsAvailable>game.player.gunChamber){
+
+    }else if (game.intervalCounter % (game.fps/2) === 0) { // 2 to reload every 0.5 sec
+        game.player.bulletsAvailable++;
+        ;
+    }
+}
 
 const computeTwoDigitNumber = function(value) {
     let twoDig = `0` + new String(value);
@@ -33,4 +41,8 @@ const computeTwoDigitNumber = function(value) {
         return false;
       }
   }
+
+//   const eliminateArrayAndDomElement = function(){
+
+//   }
 

@@ -1,19 +1,19 @@
 @font-face {
     font-family: 'zombies';
-    src: url('/css/Fonts/CurseoftheZombie.woff2') format('woff2'),
-        url('/css/Fonts/CurseoftheZombie.woff') format('woff');
+    src: url('./Fonts/CurseoftheZombie.woff2') format('woff2'),
+        url('./Fonts/CurseoftheZombie.woff') format('woff');
 }
 
 @font-face {
     font-family: 'chuky';
-    src: url('/css/Fonts/ChukyChuky-Black.woff2') format('woff2'),
-        url('/css/Fonts/ChukyChuky-Black.woff') format('woff');
+    src: url('./Fonts/ChukyChuky-Black.woff2') format('woff2'),
+        url('./Fonts/ChukyChuky-Black.woff') format('woff');
 }
 
 @font-face {
     font-family: 'scream';
-    src: url('/css/Fonts/ScreamAgain.woff2')format('woff2'),
-        url('/css/Fonts/ScreamAgain.woff') format('woff');
+    src: url('./Fonts/ScreamAgain.woff2')format('woff2'),
+        url('./Fonts/ScreamAgain.woff') format('woff');
 }
 
 body{
@@ -25,7 +25,7 @@ body{
 
 
 #board{
-    cursor: url(/css/cursor/cursor1.png),auto;
+    cursor: url(./cursor/cursor1.png),auto;
    
     
     
@@ -38,7 +38,7 @@ body{
 }
 .player{
     
-    background-image: url(/css/img/player1.png) ;
+    background-image: url(./img/player1.png) ;
     background-size:contain;
     z-index: 2;
     
@@ -51,9 +51,20 @@ body{
 }
 .zombie-fast{
     
-    background-image: url(/css/img/zombieB.png);
+    background-image: url(./img/zombieB.png);
     background-size: contain;
 }
+.zombie-boss{
+    background-image: url(./img/zombieBoss.png);
+    background-size: contain;
+    border-radius: 8px;
+}
+.baby-zombie{
+    background-image: url(./img/zombieBoss.png);
+    background-size: contain;
+    border-radius: 2px;
+}
+
 
 /* score */
 .score{
