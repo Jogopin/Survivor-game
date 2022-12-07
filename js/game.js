@@ -54,16 +54,16 @@ class Game {
       if (this.timeInSeconds > 10) this.createZombiePerSec(3);
 
       //wave of 5 zombies every 15seconds
-      this.createWaveOfZombies(5, 15);
+      this.createWaveOfZombies(5, 12);
 
       //zombies B every 5 secs
-      this.createZombieFPerSec(5);
+      this.createZombieFPerSec(7);
 
       //create a boss
       this.createZombieBoss(15);
       if (this.zombiesBoss.length) {
         this.zombiesBoss.forEach((zombieBoss) => {
-          zombieBoss.giveBirthZombies(1);
+          zombieBoss.giveBirthZombies(1.5);
         });
       }
 
@@ -341,6 +341,8 @@ class Game {
           //remove the bullet
           bullet.domElem.remove();
           this.bullets.splice(indexBullet, 1);
+          
+          if(zombie.life<4){zombie.domElem.style.filter=`sepia(0.7)`}
 
           if (zombie.life === 0) {
             zombie.domElem.style.backgroundImage = `url(/css/img/blood.png)`;

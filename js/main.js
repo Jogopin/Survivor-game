@@ -147,7 +147,7 @@ class Zombie extends ELementOnBoard {
   }
   randomFace(){
     let n =Math.floor(Math.random()*3 +1)
-    this.domElem.style.backgroundImage=`url(/css/img/zombie${n}.png)`
+    this.domElem.style.backgroundImage=`url(./css/img/zombie${n}.png)`
     
   }
   randomPosition() {
@@ -203,7 +203,7 @@ class Zombie extends ELementOnBoard {
 class ZombieF extends Zombie {
   constructor(width, height) {
     super(width, height);
-    this.steps = 5;
+    this.steps = 4;
     this.domElem.className = `zombie zombieB`;
 
     this.changeCoordinates(this.randomPosition());

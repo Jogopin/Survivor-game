@@ -15,7 +15,11 @@
     src: url('./Fonts/ScreamAgain.woff2')format('woff2'),
         url('./Fonts/ScreamAgain.woff') format('woff');
 }
-
+@keyframes hit {
+    
+    to {filter:hue-rotate(225deg);}
+    
+  }
 body{
     background-color: #6B2D2B;
     margin:0;
@@ -170,3 +174,4 @@ body{
     letter-spacing: 2px;
     color:#d9fa32cc;
 }
+
