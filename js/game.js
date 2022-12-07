@@ -49,7 +49,7 @@ class Game {
       this.createZombiePerSec(4);
 
       //after 10s zombies every 3 sec
-      if (this.timeInSeconds > 10) this.createZombiePerSec(3);
+      if (this.timeInSeconds > 20) this.createZombiePerSec(3);
 
       //wave of 5 zombies every 15seconds
       this.createWaveOfZombies(5, 12);
@@ -288,6 +288,19 @@ class Game {
   movesZombiesBoss() {
     if (this.intervalCounter % 1 === 0) {
       this.zombiesBoss.forEach((zombie) => {
+      
+       
+        if(zombie.coordXY[0]>this.player.coordXY[0]) {
+          zombie.coordXYPast[0]=zombie.coordXY[0]+5
+        }else{
+          zombie.coordXYPast[0]=zombie.coordXY[0]-5
+        }
+        if(zombie.coordXY[1]>this.player.coordXY[1]) {
+          zombie.coordXYPast[1]=zombie.coordXY[1]+5
+        }else{
+          zombie.coordXYPast[1]=zombie.coordXY[1]-5
+        }
+      
         zombie.moveTowards(this.player);
         if (collitionDetector(this.player, zombie)) {
           game.stopGame();
@@ -335,6 +348,8 @@ class Game {
       this.zombiesBoss.forEach((zombie, indexZombie) => {
         if (collitionDetector(bullet, zombie)) {
           zombie.life--;
+          
+          zombie.changeCoordinates(zombie.coordXYPast)
           //remove the bullet
           bullet.domElem.remove();
           this.bullets.splice(indexBullet, 1);
@@ -369,3 +384,5 @@ class Game {
 }
 
 const game = new Game();
+
+

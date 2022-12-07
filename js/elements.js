@@ -35,6 +35,8 @@ class ElementOnBoard {
   changeCoordinates(coordinatesXY) {
     this.domElem.style.left = coordinatesXY[0] + this.units;
     this.domElem.style.bottom = coordinatesXY[1] + this.units;
+    this.coordXY[0]=coordinatesXY[0]
+    this.coordXY[1]=coordinatesXY[1]
   }
   move(direction) {
     switch (direction) {
@@ -197,13 +199,14 @@ class Zombie extends ElementOnBoard {
     this.coordXY[0] = this.steps * cosAng + this.coordXY[0];
     this.coordXY[1] = +this.steps * senAng + this.coordXY[1];
     this.changeCoordinates(this.coordXY);
+
   }
 
 }
 class ZombieF extends Zombie {
   constructor(width, height) {
     super(width, height);
-    this.steps = 4;
+    this.steps = 3;
     this.domElem.className = `zombie zombieB`;
 
     this.changeCoordinates(this.randomPosition());
@@ -251,9 +254,10 @@ class ZombieBoss extends Zombie{
   constructor(width, height) {
     super(width, height);
     this.steps = 1;
-    this.life=10;
+    this.life=8;
     this.domElem.className = `zombie zombie-boss`;
     this.domElem.style.backgroundImage=`url(./css/img/zombieBoss.png)`
+    this.coordXYPast=[]
     
     this.changeCoordinates(this.randomPosition());
     this.elemCenter=[this.coordXY[0]+this.width/2,this.coordXY[1]+this.height/2]
@@ -261,7 +265,7 @@ class ZombieBoss extends Zombie{
   giveBirthZombies(sec){
     this.elemCenter=[this.coordXY[0]+this.width/2,this.coordXY[1]+this.height/2]
     if (game.intervalCounter % (sec * game.fps) === 1) {
-        game.zombies.push(new BabyZombie(this.elemCenter,25,25,4));
+        game.zombies.push(new BabyZombie(this.elemCenter,25,25,2));
         
     }
   }
@@ -279,11 +283,13 @@ class Bullet extends ElementOnBoard {
     this.coordXY[1] = game.player.coordXY[1]+game.player.height/2;
 
     this.domElem.className = `bullet`;
-
+    
     this.angles = this.calculateSenCos(this.directionCoordXY);
     
 
     this.changeCoordinates(this.coordXY);
+
+    
   }
   move() {
     this.coordXY[0] = this.coordXY[0] + this.steps * this.angles[0];
