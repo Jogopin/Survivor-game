@@ -107,8 +107,8 @@ class Player extends ElementOnBoard {
     this.rotateFace()
 
     this.gunChamber=10
-    this.bulletsAvailable=1
-    this.timeBetweenShoot=0.5
+    this.bulletsAvailable=0
+    this.timeBetweenShoot=0.3
     this.chargingCounter=0
 
   }

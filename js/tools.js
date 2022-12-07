@@ -18,7 +18,12 @@ const reloadGun = function () {
 
   if (game.intervalCounter % (game.fps / 2) === 0) {// one more bullet every  0.5 sec
     
-    game.player.bulletsAvailable++;
+   
+
+    if(game.player.bulletsAvailable<=game.player.gunChamber){
+      game.player.bulletsAvailable++;
+       game.bulletsIndicatorArray.push(game.createBulletIndicator())
+    }
   }
 };
 

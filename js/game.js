@@ -22,6 +22,8 @@ class Game {
     this.zombiesKilled = 0;
 
     this.bulletEventListener = null;
+    this.bulletsIndicatorArray=[];
+    
 
     this.startGameWindow();
     this.loadNewGame();
@@ -143,6 +145,17 @@ class Game {
 
     return textTime;
   }
+  createBulletIndicator(){
+    //create the element
+    let bulletDomElem = document.createElement(`div`)
+    //add properties
+    bulletDomElem.className=`ammo`
+    //create the element in the HTML
+    const chamberElem = document.querySelector(`#chamber`);
+    chamberElem.appendChild(bulletDomElem)
+    return(bulletDomElem)
+  }
+  
   attachPlayerEventListener() {
     //****************player movement****************************
     //change  the elements inside player.pressedKeyArray when we press one Arrow Key
@@ -174,7 +187,7 @@ class Game {
     document.addEventListener(`keydown`, this.playerEventListenerKeydown);
     document.addEventListener(`keyup`, this.playerEventListenerKeyup);
 
-    // this.player.rotateFace()
+    
   }
   attachBulletEventListener() {
     this.bulletEventListener = (e) => {
@@ -188,7 +201,13 @@ class Game {
       //only shoots when has bullets
       if (this.player.bulletsAvailable > 0 && this.player.chargingCounter > 0) {
         game.bullets.push(new Bullet(mouseCoordXY, 5, 5, 8));
-        this.player.bulletsAvailable--;
+            
+        this.player.bulletsAvailable--
+
+        let bulletElem=game.bulletsIndicatorArray[0]
+        bulletElem.remove()
+        game.bulletsIndicatorArray.shift()
+        
         this.player.chargingCounter = 0;
       }
     };

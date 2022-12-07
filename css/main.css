@@ -177,4 +177,18 @@ body{
     letter-spacing: 2px;
     color:#d9fa32cc;
 }
+#chamber{
+    position:absolute;
+    margin:10px;
+    display:flex;
+    flex-direction: row;
+}
+.ammo{
+    background-image: url(./img/bullet.png);
+    width: 30px;
+    height:30px;
+    margin-left:-5px;
+    background-size: contain;    
+   
+}
 
