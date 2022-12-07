@@ -45,5 +45,50 @@ const computeTwoDigitNumber = function(value) {
       }
   }
 
-//   const eliminateArrayAndDomElement = function(){
 
+
+  const collitionDetectorCircles = function(elem1,elem2){
+
+    //this is not finished and can`t be implemented
+    
+    
+    let textAngle = elem1.domElem.style.transform
+    let angle=getTransform(textAngle)
+    let hr=Math.sqrt((elem1.width/2)**2+(elem1.width/2)**2)
+    let elem1Center=null
+    if(angle>=0){
+       elem1Center=[(elem1.coordXY[0])+hr*Math.sin((Math.PI/4)+angle),elem1.coordXY[1]+hr*Math.cos((Math.PI/4)+angle)] 
+    }else{
+      elem1Center=[(elem1.coordXY[0])+hr*Math.sin((-Math.PI/4)+angle),elem1.coordXY[1]+hr*Math.cos((-Math.PI/4)+angle)]
+
+    }
+    
+    const dx= elem1Center[0]-(elem2.coordXY[0]+elem2.width/2)
+    const dy= elem1Center[1]-(elem2.coordXY[1]+elem2.height/2)
+    
+    const hypotenuse = Math.sqrt((dx * dx) + (dy * dy));
+    if(hypotenuse<((elem1.width/2)+(elem2.width/2))){
+ 
+      return true
+    }else{
+      return false
+    }
+    
+    
+  }
+
+//  {
+
+  let getTransform = function (text) {
+  
+    let sol = '';
+    for (i = 7; i < 13; i++) {
+      sol += String(text[i]);
+    }
+    if(sol[0]=="0") return 0
+    
+    
+   
+    return sol*(Math.PI/180);
+  };
+  

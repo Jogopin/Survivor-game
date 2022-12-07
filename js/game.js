@@ -30,7 +30,7 @@ class Game {
   }
   startGame() {
     this.zombies.push(new Zombie(30, 30, 2));
-
+    
     this.intervalCounter = 0;
 
     this.globalInterval = setInterval(() => {
@@ -41,8 +41,6 @@ class Game {
 
       //player movement depending of player.pressedKeyArray
       game.player.movesPlayer();
-
-
 
       //****************//
       //****enemies****//
@@ -73,7 +71,6 @@ class Game {
 
       //****bullets****/
       reloadGun();
-      
 
       //remove bullets out of the board
       this.removeBulletsOutBoard();
@@ -189,10 +186,10 @@ class Game {
         this.boardHeight + (mouseCoordXYWindow.top - e.pageY),
       ];
       //only shoots when has bullets
-      if (this.player.bulletsAvailable > 0 && this.player.chargingCounter>0) {
+      if (this.player.bulletsAvailable > 0 && this.player.chargingCounter > 0) {
         game.bullets.push(new Bullet(mouseCoordXY, 5, 5, 8));
         this.player.bulletsAvailable--;
-        this.player.chargingCounter=0
+        this.player.chargingCounter = 0;
       }
     };
 
@@ -341,8 +338,16 @@ class Game {
           //remove the bullet
           bullet.domElem.remove();
           this.bullets.splice(indexBullet, 1);
-          
-          if(zombie.life<4){zombie.domElem.style.filter=`sepia(0.7)`}
+          // change color and velocity 
+          if (zombie.life < 5) {
+            zombie.domElem.style.filter = `sepia(0.7)`;
+            zombie.steps=2
+          }// change color and velocity 
+          if(zombie.life<2){
+            zombie.steps=3
+            zombie.domElem.style.filter = `invert(1)`
+          }
+
 
           if (zombie.life === 0) {
             zombie.domElem.style.backgroundImage = `url(./css/img/blood.png)`;

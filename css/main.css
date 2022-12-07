@@ -20,6 +20,7 @@
     to {filter:hue-rotate(225deg);}
     
   }
+
 body{
     background-color: #6B2D2B;
     margin:0;
@@ -49,21 +50,23 @@ body{
    
 }
 .zombie{
-   
+    
    
    background-size:contain;
 }
 .zombie-fast{
-    
+   
     background-image: url(./img/zombieB.png);
     background-size: contain;
 }
 .zombie-boss{
+   
     background-image: url(./img/zombieBoss.png);
     background-size: contain;
     border-radius: 8px;
 }
 .baby-zombie{
+   
     background-image: url(./img/zombieBoss.png);
     background-size: contain;
     border-radius: 2px;

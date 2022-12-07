@@ -1,4 +1,4 @@
-class ELementOnBoard {
+class ElementOnBoard {
   constructor(width, height, steps) {
     this.boarWidth = 800; // this value should come from the class Game when create it
     this.boardHeight = 600; // this value should come from the class Game when create it
@@ -88,7 +88,7 @@ class ELementOnBoard {
 
 }
 
-class Player extends ELementOnBoard {
+class Player extends ElementOnBoard {
 
   constructor(width, height, steps) {
     super(width, height, steps);
@@ -138,7 +138,7 @@ class Player extends ELementOnBoard {
   }
 }
 
-class Zombie extends ELementOnBoard {
+class Zombie extends ElementOnBoard {
   constructor(width, height, steps) {
     super(width, height, steps);
     this.domElem.className = `zombie`;
@@ -209,7 +209,7 @@ class ZombieF extends Zombie {
     this.changeCoordinates(this.randomPosition());
   }
 }
-class BabyZombie extends ELementOnBoard{
+class BabyZombie extends ElementOnBoard{
   constructor(fatherCoordXY,width, height, steps) {
     super(width, height, steps);
     this.domElem.className = `zombie baby-zombie`;
@@ -250,7 +250,7 @@ class BabyZombie extends ELementOnBoard{
 class ZombieBoss extends Zombie{
   constructor(width, height) {
     super(width, height);
-    this.steps = 2;
+    this.steps = 1;
     this.life=10;
     this.domElem.className = `zombie zombie-boss`;
     this.domElem.style.backgroundImage=`url(./css/img/zombieBoss.png)`
@@ -269,7 +269,7 @@ class ZombieBoss extends Zombie{
 
 }
 
-class Bullet extends ELementOnBoard {
+class Bullet extends ElementOnBoard {
   constructor(directionCoordXY, width, height, steps) {
     super(width, height, steps);
     this.directionCoordXY = directionCoordXY;
