@@ -317,7 +317,7 @@ class Game {
     this.bullets.forEach((bullet, indexBullet) => {
       this.zombies.forEach((zombie, indexZombie) => {
         if (collitionDetector(bullet, zombie)) {
-          zombie.domElem.style.backgroundImage = `url(/css/img/blood.png)`;
+          zombie.domElem.style.backgroundImage = `url(./css/img/blood.png)`;
           zombie.domElem.style.filter = `brightness(50%)`;
 
           //remove the blood
@@ -345,7 +345,7 @@ class Game {
           if(zombie.life<4){zombie.domElem.style.filter=`sepia(0.7)`}
 
           if (zombie.life === 0) {
-            zombie.domElem.style.backgroundImage = `url(/css/img/blood.png)`;
+            zombie.domElem.style.backgroundImage = `url(./css/img/blood.png)`;
             zombie.domElem.style.filter = `brightness(50%)`;
             //score points
             this.zombiesKilled += 20;

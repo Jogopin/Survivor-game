@@ -213,7 +213,7 @@ class BabyZombie extends ELementOnBoard{
   constructor(fatherCoordXY,width, height, steps) {
     super(width, height, steps);
     this.domElem.className = `zombie baby-zombie`;
-    this.domElem.style.backgroundImage=`url(/css/img/zombieBoss.png)`
+    this.domElem.style.backgroundImage=`url(./css/img/zombieBoss.png)`
     
     //  important: prepare a deep copy of the coordinates of the player
     this.coordXY[0] = fatherCoordXY[0]
@@ -253,7 +253,7 @@ class ZombieBoss extends Zombie{
     this.steps = 2;
     this.life=10;
     this.domElem.className = `zombie zombie-boss`;
-    this.domElem.style.backgroundImage=`url(/css/img/zombieBoss.png)`
+    this.domElem.style.backgroundImage=`url(./css/img/zombieBoss.png)`
     
     this.changeCoordinates(this.randomPosition());
     this.elemCenter=[this.coordXY[0]+this.width/2,this.coordXY[1]+this.height/2]
