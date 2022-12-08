@@ -31,7 +31,10 @@ class Game {
     this.attachPlayerEventListener();
   }
   startGame() {
+
+    
     this.zombies.push(new Zombie(30, 30, 2));
+    
     
     this.intervalCounter = 0;
 
@@ -207,7 +210,7 @@ class Game {
         let bulletElem=game.bulletsIndicatorArray[0]
         bulletElem.remove()
         game.bulletsIndicatorArray.shift()
-        
+
         this.player.chargingCounter = 0;
       }
     };
@@ -298,7 +301,7 @@ class Game {
     if (this.intervalCounter % 1 === 0) {
       this.zombies.forEach((zombie) => {
         zombie.moveTowards(this.player);
-        if (collitionDetector(this.player, zombie)) {
+        if (collitionDetectorCircles(this.player,zombie)) {
           game.stopGame();
         }
       });
@@ -403,5 +406,4 @@ class Game {
 }
 
 const game = new Game();
-
 

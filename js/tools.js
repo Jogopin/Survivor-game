@@ -56,22 +56,25 @@ const computeTwoDigitNumber = function(value) {
 
     //this is not finished and can`t be implemented
     
+    let elem1Style = getComputedStyle(elem1.domElem);
+    let elem2Style = getComputedStyle(elem2.domElem);
     
-    let textAngle = elem1.domElem.style.transform
-    let angle=getTransform(textAngle)
-    let hr=Math.sqrt((elem1.width/2)**2+(elem1.width/2)**2)
-    let elem1Center=null
-    if(angle>=0){
-       elem1Center=[(elem1.coordXY[0])+hr*Math.sin((Math.PI/4)+angle),elem1.coordXY[1]+hr*Math.cos((Math.PI/4)+angle)] 
-    }else{
-      elem1Center=[(elem1.coordXY[0])+hr*Math.sin((-Math.PI/4)+angle),elem1.coordXY[1]+hr*Math.cos((-Math.PI/4)+angle)]
 
-    }
+    //get the center of the elements
+    let elem1CenterX=elem1Style.left.slice(0,-2)*1 + elem1.width/2
+    let elem2CenterX=elem2Style.left.slice(0,-2)*1 + elem2.width/2
+
+    let elem1CenterY=elem1Style.bottom.slice(0,-2)*1+ elem1.height/2
+    let elem2CenterY=elem2Style.bottom.slice(0,-2)*1 + elem2.height/2
+
     
-    const dx= elem1Center[0]-(elem2.coordXY[0]+elem2.width/2)
-    const dy= elem1Center[1]-(elem2.coordXY[1]+elem2.height/2)
+
+    const dx= elem1CenterX-elem2CenterX
+    const dy= elem1CenterY-elem2CenterY
     
     const hypotenuse = Math.sqrt((dx * dx) + (dy * dy));
+
+    console.log(hypotenuse,((elem1.width/2)+(elem2.width/2)))
     if(hypotenuse<((elem1.width/2)+(elem2.width/2))){
  
       return true
@@ -96,4 +99,5 @@ const computeTwoDigitNumber = function(value) {
    
     return sol*(Math.PI/180);
   };
+  
   
