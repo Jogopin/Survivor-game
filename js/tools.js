@@ -74,7 +74,7 @@ const computeTwoDigitNumber = function(value) {
     
     const hypotenuse = Math.sqrt((dx * dx) + (dy * dy));
 
-    console.log(hypotenuse,((elem1.width/2)+(elem2.width/2)))
+    
     if(hypotenuse<((elem1.width/2)+(elem2.width/2))){
  
       return true
@@ -100,4 +100,20 @@ const computeTwoDigitNumber = function(value) {
     return sol*(Math.PI/180);
   };
   
+  let removeInstructions = function(){
+    let  instructionsDomElem = document.querySelector(".how-play");
+    
+    
+      instructionsDomElem.remove();
+  }
   
+
+ //--------------------------------------------------------------------------------------
+  window.addEventListener("keydown", function(e) {
+    if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+        e.preventDefault();
+    }
+}, false);
+
+
+

@@ -216,7 +216,7 @@ class BabyZombie extends ElementOnBoard{
   constructor(fatherCoordXY,width, height, steps) {
     super(width, height, steps);
     this.domElem.className = `zombie baby-zombie`;
-    this.domElem.style.backgroundImage=`url(./css/img/zombieBoss.png)`
+    
     
     //  important: prepare a deep copy of the coordinates of the player
     this.coordXY[0] = fatherCoordXY[0]
@@ -315,17 +315,6 @@ class Bullet extends ElementOnBoard {
     this.domElem.style.left = coordinatesXY[0] + this.units;
     this.domElem.style.bottom = coordinatesXY[1] + this.units;
   }
-  collitionDetector(elem1, elem2) {
-    if (
-      elem1.coordXY[0] < elem2.coordXY[0] + elem2.width &&
-      elem1.coordXY[0] + elem1.width > elem2.coordXY[0] &&
-      elem1.coordXY[1] < elem2.coordXY[1] + elem2.height &&
-      elem1.height + elem1.coordXY[1] > elem2.coordXY[1]
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+
 }
 

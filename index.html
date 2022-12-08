@@ -8,17 +8,36 @@
     <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
-   
-    <div id="board">
-        <div id="chamber">
+   <div class="container">
+        <div class="left-container">
+           
+        </div>
+        <div id="board">
+            <div class="small-window how-play ">
+                <p>Instructions</p>
+                <div>
+                    <img src="./css/img/zombieimg.png" alt="zombie">
+                    <img src="./css/img/arrows.png" alt="move with the arrow keys">
+                    <img id="mouse" src="./css/img/mouse.gif" alt="shoot with the mouse">
+                </div>
+            </div>
+            <div id="chamber">
         
+            </div>
+            <div class="score">
+                <h3>Score</h3>
+                <p id="total-score"></p>
+            </div>            
         </div>
-        <div class="score">
-            <h3>Score</h3>
-            <p></p>
+        
+        <div class="right-container">
+            
         </div>
-      
     </div>
+    <div id="bottom-container">
+        
+    </div>
+    
     <script src="./js/tools.js"></script>
     <script src="./js/elements.js"></script>
     <script src="./js/game.js"></script>    

@@ -15,62 +15,182 @@
     src: url('./Fonts/ScreamAgain.woff2')format('woff2'),
         url('./Fonts/ScreamAgain.woff') format('woff');
 }
-@keyframes hit {
+@keyframes more-blood{
+    0%{ 
+        
+        
+        filter:blur(0px) brightness(90%);
+        
+    }
+    100%{
+        /* height: 10px;
+        width:10px; */
+        opacity:0;
+        filter:blur(3px)brightness(50%);
+    }
+}
+@keyframes big-blood{
+    0%{ 
+        
+        
+        filter:blur(0px) brightness(90%);
+        
+    }
+    50%{
+        height: 65px;
+        width:65px;
+        opacity:0.6;
+        filter:blur(3px)brightness(50%);
+    }
+    100%{
+        height: 60px;
+        width:60px;
+        opacity:0;
+        filter:blur(3px)brightness(50%);
+
+    }
+}
+
+@keyframes bullet-fire{
+    0%{
+        border-radius: 50%;
+        filter:blur(3px);
+        width:25px;
+        height:25px;
+        border:none;
+        box-shadow: 4px 4px rgba(223, 2, 2, 0.767);
+        background-color: rgb(230, 84, 0);
+        
+        z-index: 3;
+    }
+    100%{
+        filter:none;
+    }
+}
+@keyframes zombie-born{
+    from{
+        filter:blur(2);
+        width: 2px;
+        height: 2px;
+    }
+    to{
+
+    }
+}
+@keyframes rage{
+
+   0% { transform: translate(1px, 1px) rotate(0deg); }
+  
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-2px, 3px) rotate(-1deg); }
+ 
+  80% { transform: translate(2px, 5px) rotate(1deg); }
+  90% { transform: translate(3px, 5px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+
     
-    to {filter:hue-rotate(225deg);}
-    
-  }
+}
+
 
 body{
-    background-color: #6B2D2B;
+    background-image: radial-gradient(circle, #000000, #1a050a, #290a0e, #38090f, #48060d, #48060d, #48060d, #48060d, #38090f, #290a0e, #1a050a, #000000);
+    
     margin:0;
     padding:0;
+    
+    
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    
+    
+    
+    
+
+}
+.container{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
 
 }
 
 
 #board{
-    cursor: url(./cursor/cursor1.png),auto;
-   
     
     
-    position:relative;
-    margin:50px auto;
-    width: 800px;
-    height: 600px;
+    cursor: url(./cursor/cursor6.png),auto;
+    border-radius: 10px;
+    
+    position: relative;
+    margin: 80px 80px;
+    margin-bottom:0;
+    min-width: 800px;
+    min-height: 600px;
     background-color: rgba(182, 182, 182, 0.397);
-    overflow:hidden;
+    overflow: hidden;
+    z-index: 0;
+    
+    
+    box-shadow: 0 0 40px #d30000d7;
+    background-image: url(./img/stone-pavement.jpg);
+    background-size: cover;
+    
     
 }
 .player{
-    
+ 
+    border-radius: 50%;
     background-image: url(./img/player1.png) ;
     background-size:contain;
+    background-repeat: no-repeat;
     z-index: 2;
+    box-shadow: 0 0 2px white;
     
    
 }
 .zombie{
     
-   
-   background-size:contain;
+    border-radius: 50%;
+    
+    animation: rage 5s;
+    box-shadow: 0 0 40px #71ac037e;
+    
+    background-size:contain;
+    z-index: 1;
 }
 .zombie-fast{
-   
+    animation: rage 0.5s;
     background-image: url(./img/zombieB.png);
     background-size: contain;
+    animation-iteration-count: infinite;
+    z-index: 1;
 }
 .zombie-boss{
    
     background-image: url(./img/zombieBoss.png);
     background-size: contain;
     border-radius: 8px;
+    box-shadow: 0 0 40px #d30000d7;
+    z-index: 1;
 }
 .baby-zombie{
-   
+    animation-name:zombie-born;
+    animation-duration: 0s;
     background-image: url(./img/zombieBoss.png);
     background-size: contain;
     border-radius: 2px;
+    box-shadow: 0 0 20px #d30000d7;
+    filter:invert(1);
+
+    
+}
+.blood{
+    background-image: url(./img/blood.png);
+    background-size: contain; 
+    z-index: 1;
 }
 
 
@@ -84,14 +204,21 @@ body{
     color: #d9fa32;
     text-align: center;
     font-size: 12px;
+    opacity:0.9;
+    z-index: 0;
     
 
     
     
 }
+#time-score{
+    text-shadow: 0 0 20px white;
+
+}
 .score p{
     margin: -15px;
     font-size: 20px;
+    
     
   /* game over window   */
 }
@@ -107,7 +234,7 @@ body{
     position:absolute;
     left: 0;
     right: 0;
-    top:0;
+    top:-202px;;
     bottom:0;
     margin:auto;
 
@@ -118,6 +245,9 @@ body{
     
     z-index: 3;
     
+}
+.game-over{
+    top:0px;;
 }
 
 .game-over h2{
@@ -135,6 +265,7 @@ body{
     margin:0;
     font-size:15px;
     tab-size: 8;
+    z-index: 3;
 }
 .game-over h3 span{
     font-size:12px;
@@ -164,8 +295,16 @@ body{
 }
 
 .bullet{
-    background-color: rgb(255, 196, 0);
-    border:0.5px solid black;
+    border-radius: 10%;
+    animation-name:bullet-fire;
+    animation-duration:0.2s;
+    background-color: rgb(253, 208, 4);
+    
+    border:0.5px solid rgba(0, 0, 0, 0.842);
+    box-shadow: -0.5px -0.5px 1px 1px rgba(223, 2, 2, 0.842);
+    
+    
+    z-index: 2;
     
 }
 
@@ -183,13 +322,88 @@ body{
     margin:10px;
     display:flex;
     flex-direction: row;
+    z-index: 0;
 }
 .ammo{
     background-image: url(./img/bullet.png);
     width: 30px;
     height:30px;
     margin-left:-5px;
-    background-size: contain;    
+    background-size: contain; 
+    z-index: 0;  
+    opacity:0.8;
+    filter: drop-shadow(0 2px 4px rgba(207, 1, 1, 0.89));
+   
+    
    
 }
+.left-container{
+    background-image: url(./img/zombies-left.png);
+    background-repeat: round;
+    background-size:contain;
+    filter:blur(2px);
+    margin-top:80px;
+    
+    
+    width:250px
+    
+}
+.right-container{
+    background-image: url(./img/zombies-right.png);
+    background-repeat: round;
+    background-size:contain;
+    filter:blur(2px);
+    margin-top:80px;
+    
+    
+    width:250px
+    
+}
+.arms{
+    
+    max-width:400px;
+    
+}
+.arms-bottom{
+    margin-bottom: 0;
+    width:700px;
+    
+    filter: blur(3px);
+}
+#bottom-container{
+    background-image: url(./img/zombies-bottom.png);
+    background-repeat: round;
+    background-size:contain;
+    filter:blur(2px);
+    height:400px;
+    
 
+}
+#background-zombie{
+    
+    height: 200px;
+    
+}
+.how-play{
+    
+    
+    width:40%;
+    height:25%;
+    
+    top: 299px;
+    display: flex;
+    flex-direction: column;  
+    animation:rage 3s;
+    animation-iteration-count: infinite;
+    
+}
+.how-play img{
+   bottom:10px; 
+    height:70px;
+    
+}
+#mouse{
+    height:80px ;
+    
+
+}

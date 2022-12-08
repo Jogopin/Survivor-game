@@ -12,7 +12,7 @@ class Game {
     this.intervalDelay = 1000 / this.fps;
     this.intervalCounter = 0;
 
-    this.scoreElem = document.querySelector(`#board div p`); //
+    this.scoreElem = document.querySelector(`#total-score`); //
     this.boardElem = document.querySelector(`#board`);
 
     this.player = null;
@@ -81,6 +81,8 @@ class Game {
       this.removeBulletsOutBoard();
       //------------bullets collition detection
       this.bulletsCollitionDetector();
+
+      
     }, this.intervalDelay);
   }
   loadNewGame() {
@@ -114,6 +116,7 @@ class Game {
       this.attachBulletEventListener();
       this.startGame();
       startGameElem.remove();
+      removeInstructions()
     });
   }
   createScore() {
@@ -226,7 +229,7 @@ class Game {
     gameOverElem.className = `game-over small-window`;
     gameOverElem.innerHTML = `
             <h2>GAME OVER</h2>
-            <h3>Score:  ${this.calculateScore()}&emsp;&emsp;&emsp;&emsp;&emsp;<span>Time : ${this.showTime()}</span></h3>   
+            <h3 id="time-score">Score:  ${this.calculateScore()}&emsp;&emsp;&emsp;&emsp;&emsp;<span>Time : ${this.showTime()}</span></h3>   
             <button class="btn"id="replay">Replay!!!</button>
             `;
     //place the element
@@ -359,12 +362,16 @@ class Game {
       this.zombies.forEach((zombie, indexZombie) => {
         if (collitionDetector(bullet, zombie)) {
           zombie.domElem.style.backgroundImage = `url(./css/img/blood.png)`;
-          zombie.domElem.style.filter = `brightness(50%)`;
+          zombie.domElem.style.zIndex=`0`
+          zombie.domElem.style.boxShadow=`none`
+          zombie.domElem.style.animationName=`more-blood`
+          zombie.domElem.style.animationDuration=`5s`
+          
 
           //remove the blood
           setTimeout(() => {
             zombie.domElem.remove();
-          }, 2000);
+          }, 5000);
 
           this.zombies.splice(indexZombie, 1);
 
@@ -389,7 +396,7 @@ class Game {
             zombie.domElem.style.filter = `sepia(0.7)`;
             zombie.steps=2
           }// change color and velocity 
-          if(zombie.life<2){
+          if(zombie.life<=2){
             zombie.steps=3
             zombie.domElem.style.filter = `invert(1)`
           }
@@ -397,14 +404,17 @@ class Game {
 
           if (zombie.life === 0) {
             zombie.domElem.style.backgroundImage = `url(./css/img/blood.png)`;
-            zombie.domElem.style.filter = `brightness(50%)`;
+            zombie.domElem.style.zIndex ="0"
+            zombie.domElem.style.animationName=`big-blood`
+            zombie.domElem.style.boxShadow=`none`
+            zombie.domElem.style.animationDuration=`5s`
             //score points
             this.zombiesKilled += 20;
 
             //remove the blood
             setTimeout(() => {
               zombie.domElem.remove();
-            }, 4000);
+            }, 5000);
 
             this.zombiesBoss.splice(indexZombie, 1);
           }
