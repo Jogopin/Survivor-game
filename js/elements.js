@@ -159,18 +159,18 @@ class Zombie extends ElementOnBoard {
     switch (posibility) {
       case 0:
         this.coordXY[0] = Math.random() * (800 - this.width);
-        this.coordXY[1] = 0;
+        this.coordXY[1] = -this.height;
         break;
       case 1:
         this.coordXY[0] = Math.random() * (800 - this.width);
-        this.coordXY[1] = 600 - this.height; 
+        this.coordXY[1] = 600 + this.height ; 
         break;
       case 2:
-        this.coordXY[0] = 0;
+        this.coordXY[0] = -this.width;
         this.coordXY[1] = Math.random() * (600 - this.height);
         break;
       case 3:
-        this.coordXY[0] = 800 - this.width;
+        this.coordXY[0] = 800 +this.width ;
         this.coordXY[1] = Math.random() * (600 - this.height);
         break;
     }

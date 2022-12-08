@@ -39,6 +39,7 @@ body{
     width: 800px;
     height: 600px;
     background-color: rgba(182, 182, 182, 0.397);
+    overflow:hidden;
     
 }
 .player{
