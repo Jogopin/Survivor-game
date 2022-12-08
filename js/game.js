@@ -238,21 +238,30 @@ class Game {
     replay.addEventListener(`click`, () => {
       this.timeInSeconds = 0;
       //removing elements of the board
+
+      //zombies
       this.zombies.forEach((zombie) => {
         zombie.domElem.remove();
       });
       this.zombies = [];
 
+      //bullets
       this.bullets.forEach((bullet) => {
         bullet.domElem.remove();
       });
+      this.bullets = [];
 
+      //zombie boss
       this.zombiesBoss.forEach((zombie) => {
         zombie.domElem.remove();
       });
       this.zombiesBoss = [];
+      //bullets display
+      this.bulletsIndicatorArray.forEach((bulletIndicator)=>{
+        bulletIndicator.remove()
+      })
+      this.bulletsIndicatorArray=[]
 
-      this.bullets = [];
 
       this.player.domElem.remove();
       document.removeEventListener(

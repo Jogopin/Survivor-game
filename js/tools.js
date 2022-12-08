@@ -54,7 +54,7 @@ const computeTwoDigitNumber = function(value) {
 
   const collitionDetectorCircles = function(elem1,elem2){
 
-    //this is not finished and can`t be implemented
+    
     
     let elem1Style = getComputedStyle(elem1.domElem);
     let elem2Style = getComputedStyle(elem2.domElem);
