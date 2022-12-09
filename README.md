@@ -5,14 +5,17 @@
 
 ![game-screen](./css/img/game-screen.png)
 
-As the first project for my Ironhack bootcamp, Survivor is an OPP arcade game created with JavaScript, HTML, and CSS.
+As the first project for my Ironhack bootcamp, Survivor is an arcade game created with JavaScript, HTML, and CSS.
 
 
 ## How to play
 
-The goal of the game is to survive the waves of zombies that are continually coming at you while moving in 8 different directions  and shooting them.
+![in-game](./css/img/total.png)
 
-to move you can use the arrow keys, and  you can shoot with the mouse.
+The goal of the game is to survive the waves of zombies that are continually coming at you.
+
+
+The arrow keys let you to travel in 8 different directions, and the mouse is used to shoot bullets.
 
 ## Demo
 
