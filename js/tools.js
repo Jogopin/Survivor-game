@@ -117,3 +117,10 @@ const computeTwoDigitNumber = function(value) {
 
 
 
+const removeBulletsBugged = function(){
+  const bulletsBugged = document.querySelectorAll(`.bullet`)
+  console.log(bulletsBugged)
+  bulletsBugged.forEach((bulletElem)=>{
+    bulletElem.remove()
+  })
+}

@@ -274,6 +274,7 @@ class Game {
       this.score = 0;
 
       gameOverElem.remove();
+      removeBulletsBugged()
 
       //starts a new game
       this.loadNewGame();
@@ -361,6 +362,8 @@ class Game {
     this.bullets.forEach((bullet, indexBullet) => {
       this.zombies.forEach((zombie, indexZombie) => {
         if (collitionDetector(bullet, zombie)) {
+          
+          
           zombie.domElem.style.backgroundImage = `url(./css/img/blood.png)`;
           zombie.domElem.style.zIndex=`0`
           zombie.domElem.style.boxShadow=`none`
