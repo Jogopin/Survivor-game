@@ -2,8 +2,11 @@
 
 ## Description
 
-As the first project for the Ironhack bootcamp, Survivor is an OPP arcade game created with JavaScript, HTML, and CSS.
-![game-screen](./css/img/game-screeen.png)
+
+![game-screen](./css/img/game-screen.png)
+
+As the first project for my Ironhack bootcamp, Survivor is an OPP arcade game created with JavaScript, HTML, and CSS.
+
 
 ## How to play
 
