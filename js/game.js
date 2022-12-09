@@ -79,8 +79,8 @@ class Game {
 
       //remove bullets out of the board
       this.removeBulletsOutBoard();
-      //------------bullets collition detection
-      this.bulletsCollitionDetector();
+      //------------bullets collision detection
+      this.bulletsCollisionDetector();
 
       
     }, this.intervalDelay);
@@ -314,7 +314,7 @@ class Game {
     if (this.intervalCounter % 1 === 0) {
       this.zombies.forEach((zombie) => {
         zombie.moveTowards(this.player);
-        if (collitionDetectorCircles(this.player,zombie)) {
+        if (collisionDetectorCircles(this.player,zombie)) {
           game.stopGame();
         }
       });
@@ -337,7 +337,7 @@ class Game {
         }
       
         zombie.moveTowards(this.player);
-        if (collitionDetector(this.player, zombie)) {
+        if (collisionDetector(this.player, zombie)) {
           game.stopGame();
         }
       });
@@ -358,10 +358,10 @@ class Game {
     });
   }
 
-  bulletsCollitionDetector() {
+  bulletsCollisionDetector() {
     this.bullets.forEach((bullet, indexBullet) => {
       this.zombies.forEach((zombie, indexZombie) => {
-        if (collitionDetector(bullet, zombie)) {
+        if (collisionDetector(bullet, zombie)) {
           
           
           zombie.domElem.style.backgroundImage = `url(./css/img/blood.png)`;
@@ -387,7 +387,7 @@ class Game {
         }
       });
       this.zombiesBoss.forEach((zombie, indexZombie) => {
-        if (collitionDetector(bullet, zombie)) {
+        if (collisionDetector(bullet, zombie)) {
           zombie.life--;
           
           zombie.changeCoordinates(zombie.coordXYPast)

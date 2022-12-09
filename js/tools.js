@@ -37,7 +37,7 @@ const computeTwoDigitNumber = function(value) {
     return twoDig;
   }
 
-  const collitionDetector = function(elem1,elem2){
+  const collisionDetector = function(elem1,elem2){
     if (
         elem1.coordXY[0] < elem2.coordXY[0] + elem2.width &&
         elem1.coordXY[0] + elem1.width > elem2.coordXY[0] &&
@@ -52,7 +52,7 @@ const computeTwoDigitNumber = function(value) {
 
 
 
-  const collitionDetectorCircles = function(elem1,elem2){
+  const collisionDetectorCircles = function(elem1,elem2){
 
     
     
